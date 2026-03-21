@@ -1,0 +1,21 @@
+[
+  { "id": "amai-mitsu",        "name": "あまいミツ",       "energy": 101 },
+  { "id": "anmin-tomato",      "name": "あんみんトマト",   "energy": 110 },
+  { "id": "hokkori-potato",    "name": "ほっこりポテト",   "energy": 124 },
+  { "id": "attaka-ginger",     "name": "あったかジンジャー", "energy": 109 },
+  { "id": "relax-cacao",       "name": "リラックスカカオ", "energy": 151 },
+  { "id": "gekikara-herb",     "name": "げきからハーブ",   "energy": 130 },
+  { "id": "pure-oil",          "name": "ピュアなオイル",   "energy": 121 },
+  { "id": "mame-meat",         "name": "マメミート",       "energy": 103 },
+  { "id": "moumou-milk",       "name": "モーモーミルク",   "energy": 98  },
+  { "id": "tokusen-egg",       "name": "とくせんエッグ",   "energy": 115 },
+  { "id": "tokusen-ringo",     "name": "とくせんリンゴ",   "energy": 90  },
+  { "id": "ajiwai-kinoko",     "name": "あじわいキノコ",   "energy": 167 },
+  { "id": "futoi-naganegi",    "name": "ふといながねぎ",   "energy": 185 },
+  { "id": "oishii-shippo",     "name": "おいしいシッポ",   "energy": 342 },
+  { "id": "wakakusa-daizu",    "name": "ワカクサ大豆",     "energy": 100 },
+  { "id": "wakakusa-corn",     "name": "ワカクサコーン",   "energy": 140 },
+  { "id": "mezamashi-coffee",  "name": "めざましコーヒー", "energy": 153 },
+  { "id": "tsuyatsuya-avocado","name": "つやつやアボカド", "energy": 162 },
+  { "id": "zussiri-kabocha",   "name": "ずっしりカボチャ", "energy": 250 }
+]

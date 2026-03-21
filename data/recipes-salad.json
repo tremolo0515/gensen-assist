@@ -1,0 +1,307 @@
+[
+  {
+    "id": "gochimaze-salad",
+    "name": "ごちゃまぜサラダ",
+    "category": "salad",
+    "ingredients": [],
+    "totalCount": 0,
+    "energy": 0
+  },
+  {
+    "id": "yadon-tail-pepper-salad",
+    "name": "ヤドンテールのペッパーサラダ",
+    "category": "salad",
+    "ingredients": [
+      { "ingredientId": "oishii-shippo", "count": 10 },
+      { "ingredientId": "gekikara-herb", "count": 10 },
+      { "ingredientId": "pure-oil", "count": 15 }
+    ],
+    "totalCount": 35,
+    "energy": 8169
+  },
+  {
+    "id": "kinoko-houshi-salad",
+    "name": "キノコのほうしサラダ",
+    "category": "salad",
+    "ingredients": [
+      { "ingredientId": "ajiwai-kinoko", "count": 17 },
+      { "ingredientId": "anmin-tomato", "count": 8 },
+      { "ingredientId": "pure-oil", "count": 8 }
+    ],
+    "totalCount": 33,
+    "energy": 5859
+  },
+  {
+    "id": "yukikaki-caesar-salad",
+    "name": "ゆきかきシーザーサラダ",
+    "category": "salad",
+    "ingredients": [
+      { "ingredientId": "moumou-milk", "count": 10 },
+      { "ingredientId": "mame-meat", "count": 6 }
+    ],
+    "totalCount": 16,
+    "energy": 1898
+  },
+  {
+    "id": "kuishinbo-potato-salad",
+    "name": "くいしんぼうポテトサラダ",
+    "category": "salad",
+    "ingredients": [
+      { "ingredientId": "hokkori-potato", "count": 14 },
+      { "ingredientId": "tokusen-egg", "count": 9 },
+      { "ingredientId": "mame-meat", "count": 7 },
+      { "ingredientId": "tokusen-ringo", "count": 6 }
+    ],
+    "totalCount": 36,
+    "energy": 5040
+  },
+  {
+    "id": "uruoi-tofu-salad",
+    "name": "うるおいとうふサラダ",
+    "category": "salad",
+    "ingredients": [
+      { "ingredientId": "wakakusa-daizu", "count": 15 },
+      { "ingredientId": "anmin-tomato", "count": 9 }
+    ],
+    "totalCount": 24,
+    "energy": 3113
+  },
+  {
+    "id": "bakajikara-wild-salad",
+    "name": "ばかぢからワイルドサラダ",
+    "category": "salad",
+    "ingredients": [
+      { "ingredientId": "mame-meat", "count": 9 },
+      { "ingredientId": "attaka-ginger", "count": 6 },
+      { "ingredientId": "tokusen-egg", "count": 5 },
+      { "ingredientId": "hokkori-potato", "count": 3 }
+    ],
+    "totalCount": 23,
+    "energy": 3046
+  },
+  {
+    "id": "mameham-salad",
+    "name": "マメハムサラダ",
+    "category": "salad",
+    "ingredients": [
+      { "ingredientId": "mame-meat", "count": 8 }
+    ],
+    "totalCount": 8,
+    "energy": 978
+  },
+  {
+    "id": "anmin-tomato-salad",
+    "name": "あんみんトマトサラダ",
+    "category": "salad",
+    "ingredients": [
+      { "ingredientId": "anmin-tomato", "count": 8 }
+    ],
+    "totalCount": 8,
+    "energy": 1045
+  },
+  {
+    "id": "moumou-caprese",
+    "name": "モーモーカプレーゼ",
+    "category": "salad",
+    "ingredients": [
+      { "ingredientId": "moumou-milk", "count": 12 },
+      { "ingredientId": "anmin-tomato", "count": 6 },
+      { "ingredientId": "pure-oil", "count": 5 }
+    ],
+    "totalCount": 23,
+    "energy": 2942
+  },
+  {
+    "id": "murakke-choco-meat-salad",
+    "name": "ムラっけチョコミートサラダ",
+    "category": "salad",
+    "ingredients": [
+      { "ingredientId": "relax-cacao", "count": 14 },
+      { "ingredientId": "mame-meat", "count": 9 }
+    ],
+    "totalCount": 23,
+    "energy": 3665
+  },
+  {
+    "id": "overheat-salad",
+    "name": "オーバーヒートサラダ",
+    "category": "salad",
+    "ingredients": [
+      { "ingredientId": "gekikara-herb", "count": 17 },
+      { "ingredientId": "attaka-ginger", "count": 10 },
+      { "ingredientId": "anmin-tomato", "count": 8 }
+    ],
+    "totalCount": 35,
+    "energy": 5225
+  },
+  {
+    "id": "tokusen-ringo-salad",
+    "name": "とくせんリンゴサラダ",
+    "category": "salad",
+    "ingredients": [
+      { "ingredientId": "tokusen-ringo", "count": 8 }
+    ],
+    "totalCount": 8,
+    "energy": 855
+  },
+  {
+    "id": "meneki-negi-salad",
+    "name": "めんえきねぎサラダ",
+    "category": "salad",
+    "ingredients": [
+      { "ingredientId": "futoi-naganegi", "count": 10 },
+      { "ingredientId": "attaka-ginger", "count": 5 }
+    ],
+    "totalCount": 15,
+    "energy": 2845
+  },
+  {
+    "id": "meromero-apple-cheese-salad",
+    "name": "メロメロりんごのチーズサラダ",
+    "category": "salad",
+    "ingredients": [
+      { "ingredientId": "tokusen-ringo", "count": 15 },
+      { "ingredientId": "moumou-milk", "count": 5 },
+      { "ingredientId": "pure-oil", "count": 3 }
+    ],
+    "totalCount": 23,
+    "energy": 2655
+  },
+  {
+    "id": "ninja-salad",
+    "name": "ニンジャサラダ",
+    "category": "salad",
+    "ingredients": [
+      { "ingredientId": "futoi-naganegi", "count": 15 },
+      { "ingredientId": "wakakusa-daizu", "count": 19 },
+      { "ingredientId": "ajiwai-kinoko", "count": 12 },
+      { "ingredientId": "attaka-ginger", "count": 11 }
+    ],
+    "totalCount": 57,
+    "energy": 11659
+  },
+  {
+    "id": "neppuu-tofu-salad",
+    "name": "ねっぷうとうふサラダ",
+    "category": "salad",
+    "ingredients": [
+      { "ingredientId": "wakakusa-daizu", "count": 10 },
+      { "ingredientId": "gekikara-herb", "count": 6 }
+    ],
+    "totalCount": 16,
+    "energy": 2114
+  },
+  {
+    "id": "wakakusa-salad",
+    "name": "ワカクササラダ",
+    "category": "salad",
+    "ingredients": [
+      { "ingredientId": "pure-oil", "count": 22 },
+      { "ingredientId": "wakakusa-corn", "count": 17 },
+      { "ingredientId": "anmin-tomato", "count": 14 },
+      { "ingredientId": "hokkori-potato", "count": 9 }
+    ],
+    "totalCount": 62,
+    "energy": 11393
+  },
+  {
+    "id": "meisou-sweet-salad",
+    "name": "めいそうスイートサラダ",
+    "category": "salad",
+    "ingredients": [
+      { "ingredientId": "tokusen-ringo", "count": 21 },
+      { "ingredientId": "amai-mitsu", "count": 16 },
+      { "ingredientId": "wakakusa-corn", "count": 12 }
+    ],
+    "totalCount": 49,
+    "energy": 7675
+  },
+  {
+    "id": "midarezuki-corn-salad",
+    "name": "みだれづきコーンサラダ",
+    "category": "salad",
+    "ingredients": [
+      { "ingredientId": "wakakusa-corn", "count": 9 },
+      { "ingredientId": "pure-oil", "count": 8 }
+    ],
+    "totalCount": 17,
+    "energy": 2785
+  },
+  {
+    "id": "cross-chopped-salad",
+    "name": "クロスチョップドサラダ",
+    "category": "salad",
+    "ingredients": [
+      { "ingredientId": "tokusen-egg", "count": 20 },
+      { "ingredientId": "mame-meat", "count": 15 },
+      { "ingredientId": "wakakusa-corn", "count": 11 },
+      { "ingredientId": "anmin-tomato", "count": 10 }
+    ],
+    "totalCount": 56,
+    "energy": 8755
+  },
+  {
+    "id": "makenki-coffee-salad",
+    "name": "まけんきコーヒーサラダ",
+    "category": "salad",
+    "ingredients": [
+      { "ingredientId": "mezamashi-coffee", "count": 28 },
+      { "ingredientId": "mame-meat", "count": 28 },
+      { "ingredientId": "pure-oil", "count": 22 },
+      { "ingredientId": "hokkori-potato", "count": 22 }
+    ],
+    "totalCount": 100,
+    "energy": 20218
+  },
+  {
+    "id": "hanafubuki-mimosa-salad",
+    "name": "はなふぶきミモザサラダ",
+    "category": "salad",
+    "ingredients": [
+      { "ingredientId": "tokusen-egg", "count": 25 },
+      { "ingredientId": "pure-oil", "count": 17 },
+      { "ingredientId": "hokkori-potato", "count": 15 },
+      { "ingredientId": "mame-meat", "count": 12 }
+    ],
+    "totalCount": 69,
+    "energy": 11881
+  },
+  {
+    "id": "ringo-san-yogurt-salad",
+    "name": "りんごさんヨーグルトサラダ",
+    "category": "salad",
+    "ingredients": [
+      { "ingredientId": "tokusen-egg", "count": 35 },
+      { "ingredientId": "tokusen-ringo", "count": 28 },
+      { "ingredientId": "anmin-tomato", "count": 23 },
+      { "ingredientId": "moumou-milk", "count": 18 }
+    ],
+    "totalCount": 104,
+    "energy": 19293
+  },
+  {
+    "id": "kudakeru-avocado-salad",
+    "name": "くだけるアボカドサラダ",
+    "category": "salad",
+    "ingredients": [
+      { "ingredientId": "tsuyatsuya-avocado", "count": 14 },
+      { "ingredientId": "wakakusa-daizu", "count": 18 },
+      { "ingredientId": "pure-oil", "count": 10 }
+    ],
+    "totalCount": 42,
+    "energy": 7125
+  },
+  {
+    "id": "jinarashi-guacamole-chips",
+    "name": "じならしワカモレチップス",
+    "category": "salad",
+    "ingredients": [
+      { "ingredientId": "tsuyatsuya-avocado", "count": 28 },
+      { "ingredientId": "wakakusa-corn", "count": 25 },
+      { "ingredientId": "gekikara-herb", "count": 30 },
+      { "ingredientId": "wakakusa-daizu", "count": 22 }
+    ],
+    "totalCount": 105,
+    "energy": 25162
+  }
+]

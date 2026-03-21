@@ -1,0 +1,281 @@
+[
+  {
+    "id": "gochimaze-curry",
+    "name": "ごちゃまぜカレー",
+    "category": "curry",
+    "ingredients": [],
+    "totalCount": 0,
+    "energy": 0
+  },
+  {
+    "id": "tokusen-ringo-curry",
+    "name": "とくせんリンゴカレー",
+    "category": "curry",
+    "ingredients": [
+      { "ingredientId": "tokusen-ringo", "count": 7 }
+    ],
+    "totalCount": 7,
+    "energy": 748
+  },
+  {
+    "id": "aburi-tail-curry",
+    "name": "あぶりテールカレー",
+    "category": "curry",
+    "ingredients": [
+      { "ingredientId": "oishii-shippo", "count": 8 },
+      { "ingredientId": "gekikara-herb", "count": 25 }
+    ],
+    "totalCount": 33,
+    "energy": 7483
+  },
+  {
+    "id": "sunpower-tomato-curry",
+    "name": "サンパワートマトカレー",
+    "category": "curry",
+    "ingredients": [
+      { "ingredientId": "anmin-tomato", "count": 10 },
+      { "ingredientId": "gekikara-herb", "count": 5 }
+    ],
+    "totalCount": 15,
+    "energy": 2078
+  },
+  {
+    "id": "zettai-nemuri-butter-curry",
+    "name": "ぜったいねむりバターカレー",
+    "category": "curry",
+    "ingredients": [
+      { "ingredientId": "hokkori-potato", "count": 18 },
+      { "ingredientId": "anmin-tomato", "count": 15 },
+      { "ingredientId": "relax-cacao", "count": 12 },
+      { "ingredientId": "moumou-milk", "count": 10 }
+    ],
+    "totalCount": 55,
+    "energy": 9010
+  },
+  {
+    "id": "karakuchi-negi-curry",
+    "name": "からくちネギもりカレー",
+    "category": "curry",
+    "ingredients": [
+      { "ingredientId": "futoi-naganegi", "count": 14 },
+      { "ingredientId": "attaka-ginger", "count": 10 },
+      { "ingredientId": "gekikara-herb", "count": 8 }
+    ],
+    "totalCount": 32,
+    "energy": 5900
+  },
+  {
+    "id": "kinoko-houshi-curry",
+    "name": "キノコのほうしカレー",
+    "category": "curry",
+    "ingredients": [
+      { "ingredientId": "ajiwai-kinoko", "count": 14 },
+      { "ingredientId": "hokkori-potato", "count": 9 }
+    ],
+    "totalCount": 23,
+    "energy": 4162
+  },
+  {
+    "id": "oyakoai-curry",
+    "name": "おやこあいカレー",
+    "category": "curry",
+    "ingredients": [
+      { "ingredientId": "amai-mitsu", "count": 12 },
+      { "ingredientId": "tokusen-ringo", "count": 11 },
+      { "ingredientId": "tokusen-egg", "count": 8 },
+      { "ingredientId": "hokkori-potato", "count": 4 }
+    ],
+    "totalCount": 35,
+    "energy": 4523
+  },
+  {
+    "id": "manpuku-cheeseburg-curry",
+    "name": "満腹チーズバーグカレー",
+    "category": "curry",
+    "ingredients": [
+      { "ingredientId": "moumou-milk", "count": 8 },
+      { "ingredientId": "mame-meat", "count": 8 }
+    ],
+    "totalCount": 16,
+    "energy": 1910
+  },
+  {
+    "id": "hokkori-white-stew",
+    "name": "ほっこりホワイトシチュー",
+    "category": "curry",
+    "ingredients": [
+      { "ingredientId": "moumou-milk", "count": 10 },
+      { "ingredientId": "hokkori-potato", "count": 8 },
+      { "ingredientId": "ajiwai-kinoko", "count": 4 }
+    ],
+    "totalCount": 22,
+    "energy": 3181
+  },
+  {
+    "id": "tanjun-white-stew",
+    "name": "たんじゅんホワイトシチュー",
+    "category": "curry",
+    "ingredients": [
+      { "ingredientId": "moumou-milk", "count": 7 }
+    ],
+    "totalCount": 7,
+    "energy": 814
+  },
+  {
+    "id": "mameburger-curry",
+    "name": "マメバーグカレー",
+    "category": "curry",
+    "ingredients": [
+      { "ingredientId": "mame-meat", "count": 7 }
+    ],
+    "totalCount": 7,
+    "energy": 856
+  },
+  {
+    "id": "baby-honey-curry",
+    "name": "ベイビィハニーカレー",
+    "category": "curry",
+    "ingredients": [
+      { "ingredientId": "amai-mitsu", "count": 7 }
+    ],
+    "totalCount": 7,
+    "energy": 839
+  },
+  {
+    "id": "ninja-curry",
+    "name": "ニンジャカレー",
+    "category": "curry",
+    "ingredients": [
+      { "ingredientId": "wakakusa-daizu", "count": 24 },
+      { "ingredientId": "mame-meat", "count": 9 },
+      { "ingredientId": "futoi-naganegi", "count": 12 },
+      { "ingredientId": "ajiwai-kinoko", "count": 5 }
+    ],
+    "totalCount": 50,
+    "energy": 9445
+  },
+  {
+    "id": "hideri-katsuretsu-curry",
+    "name": "ひでりカツレツカレー",
+    "category": "curry",
+    "ingredients": [
+      { "ingredientId": "mame-meat", "count": 10 },
+      { "ingredientId": "pure-oil", "count": 5 }
+    ],
+    "totalCount": 15,
+    "energy": 1942
+  },
+  {
+    "id": "tokeru-omucurry",
+    "name": "とけるオムカレー",
+    "category": "curry",
+    "ingredients": [
+      { "ingredientId": "tokusen-egg", "count": 10 },
+      { "ingredientId": "anmin-tomato", "count": 6 }
+    ],
+    "totalCount": 16,
+    "energy": 2150
+  },
+  {
+    "id": "buildup-mame-curry",
+    "name": "ビルドアップマメカレー",
+    "category": "curry",
+    "ingredients": [
+      { "ingredientId": "wakakusa-daizu", "count": 12 },
+      { "ingredientId": "mame-meat", "count": 6 },
+      { "ingredientId": "gekikara-herb", "count": 4 },
+      { "ingredientId": "tokusen-egg", "count": 4 }
+    ],
+    "totalCount": 26,
+    "energy": 3372
+  },
+  {
+    "id": "juunan-corn-stew",
+    "name": "じゅうなんコーンシチュー",
+    "category": "curry",
+    "ingredients": [
+      { "ingredientId": "wakakusa-corn", "count": 14 },
+      { "ingredientId": "moumou-milk", "count": 8 },
+      { "ingredientId": "hokkori-potato", "count": 8 }
+    ],
+    "totalCount": 30,
+    "energy": 4670
+  },
+  {
+    "id": "rengoku-corn-keema-curry",
+    "name": "れんごくコーンキーマカレー",
+    "category": "curry",
+    "ingredients": [
+      { "ingredientId": "gekikara-herb", "count": 27 },
+      { "ingredientId": "mame-meat", "count": 24 },
+      { "ingredientId": "wakakusa-corn", "count": 14 },
+      { "ingredientId": "attaka-ginger", "count": 12 }
+    ],
+    "totalCount": 77,
+    "energy": 13690
+  },
+  {
+    "id": "piyopiyo-karakuchi-curry",
+    "name": "ピヨピヨパンチ辛口カレー",
+    "category": "curry",
+    "ingredients": [
+      { "ingredientId": "mezamashi-coffee", "count": 11 },
+      { "ingredientId": "gekikara-herb", "count": 11 },
+      { "ingredientId": "amai-mitsu", "count": 11 }
+    ],
+    "totalCount": 33,
+    "energy": 5702
+  },
+  {
+    "id": "mezameru-power-stew",
+    "name": "めざめるパワーシチュー",
+    "category": "curry",
+    "ingredients": [
+      { "ingredientId": "wakakusa-daizu", "count": 28 },
+      { "ingredientId": "anmin-tomato", "count": 25 },
+      { "ingredientId": "ajiwai-kinoko", "count": 23 },
+      { "ingredientId": "mezamashi-coffee", "count": 16 }
+    ],
+    "totalCount": 92,
+    "energy": 19061
+  },
+  {
+    "id": "iaigiri-sukiyaki-curry",
+    "name": "いあいぎりすき焼きカレー",
+    "category": "curry",
+    "ingredients": [
+      { "ingredientId": "futoi-naganegi", "count": 27 },
+      { "ingredientId": "mame-meat", "count": 26 },
+      { "ingredientId": "amai-mitsu", "count": 26 },
+      { "ingredientId": "tokusen-egg", "count": 22 }
+    ],
+    "totalCount": 101,
+    "energy": 20655
+  },
+  {
+    "id": "narikiri-bakeccha-stew",
+    "name": "なりきりバケッチャシチュー",
+    "category": "curry",
+    "ingredients": [
+      { "ingredientId": "zussiri-kabocha", "count": 10 },
+      { "ingredientId": "mame-meat", "count": 16 },
+      { "ingredientId": "hokkori-potato", "count": 18 },
+      { "ingredientId": "ajiwai-kinoko", "count": 25 }
+    ],
+    "totalCount": 69,
+    "energy": 15621
+  },
+  {
+    "id": "shinryoku-avocado-gratin",
+    "name": "しんりょくアボカドグラタン",
+    "category": "curry",
+    "ingredients": [
+      { "ingredientId": "tsuyatsuya-avocado", "count": 22 },
+      { "ingredientId": "hokkori-potato", "count": 20 },
+      { "ingredientId": "moumou-milk", "count": 41 },
+      { "ingredientId": "pure-oil", "count": 32 }
+    ],
+    "totalCount": 115,
+    "energy": 24802
+  }
+]

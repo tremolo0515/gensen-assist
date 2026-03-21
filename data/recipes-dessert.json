@@ -1,0 +1,330 @@
+[
+  {
+    "id": "gochimaze-juice",
+    "name": "ごちゃまぜジュース",
+    "category": "dessert",
+    "ingredients": [],
+    "totalCount": 0,
+    "energy": 0
+  },
+  {
+    "id": "jukusei-sweet-potato",
+    "name": "じゅくせいスイートポテト",
+    "category": "dessert",
+    "ingredients": [
+      { "ingredientId": "hokkori-potato", "count": 9 },
+      { "ingredientId": "moumou-milk", "count": 5 }
+    ],
+    "totalCount": 14,
+    "energy": 1907
+  },
+  {
+    "id": "fukutsu-ginger-cookie",
+    "name": "ふくつのジンジャークッキー",
+    "category": "dessert",
+    "ingredients": [
+      { "ingredientId": "amai-mitsu", "count": 14 },
+      { "ingredientId": "attaka-ginger", "count": 12 },
+      { "ingredientId": "relax-cacao", "count": 5 },
+      { "ingredientId": "tokusen-egg", "count": 4 }
+    ],
+    "totalCount": 35,
+    "energy": 4921
+  },
+  {
+    "id": "tokusen-ringo-juice",
+    "name": "とくせんリンゴジュース",
+    "category": "dessert",
+    "ingredients": [
+      { "ingredientId": "tokusen-ringo", "count": 8 }
+    ],
+    "totalCount": 8,
+    "energy": 855
+  },
+  {
+    "id": "craft-psycho-soda",
+    "name": "クラフトサイコソーダ",
+    "category": "dessert",
+    "ingredients": [
+      { "ingredientId": "amai-mitsu", "count": 9 }
+    ],
+    "totalCount": 9,
+    "energy": 1079
+  },
+  {
+    "id": "hinoko-ginger-tea",
+    "name": "ひのこのジンジャーティー",
+    "category": "dessert",
+    "ingredients": [
+      { "ingredientId": "attaka-ginger", "count": 9 },
+      { "ingredientId": "tokusen-ringo", "count": 7 }
+    ],
+    "totalCount": 16,
+    "energy": 1913
+  },
+  {
+    "id": "purin-alamode",
+    "name": "プリンのプリンアラモード",
+    "category": "dessert",
+    "ingredients": [
+      { "ingredientId": "amai-mitsu", "count": 20 },
+      { "ingredientId": "tokusen-egg", "count": 15 },
+      { "ingredientId": "moumou-milk", "count": 10 },
+      { "ingredientId": "tokusen-ringo", "count": 10 }
+    ],
+    "totalCount": 55,
+    "energy": 7594
+  },
+  {
+    "id": "akuma-kiss-smoothie",
+    "name": "あくまのキッスフルーツオレ",
+    "category": "dessert",
+    "ingredients": [
+      { "ingredientId": "tokusen-ringo", "count": 11 },
+      { "ingredientId": "moumou-milk", "count": 9 },
+      { "ingredientId": "amai-mitsu", "count": 7 },
+      { "ingredientId": "relax-cacao", "count": 8 }
+    ],
+    "totalCount": 35,
+    "energy": 4734
+  },
+  {
+    "id": "negaigoto-apple-pie",
+    "name": "ねがいごとアップルパイ",
+    "category": "dessert",
+    "ingredients": [
+      { "ingredientId": "tokusen-ringo", "count": 12 },
+      { "ingredientId": "moumou-milk", "count": 4 }
+    ],
+    "totalCount": 16,
+    "energy": 1748
+  },
+  {
+    "id": "neroli-detox-tea",
+    "name": "ネロリのデトックスティー",
+    "category": "dessert",
+    "ingredients": [
+      { "ingredientId": "attaka-ginger", "count": 11 },
+      { "ingredientId": "tokusen-ringo", "count": 15 },
+      { "ingredientId": "ajiwai-kinoko", "count": 9 }
+    ],
+    "totalCount": 35,
+    "energy": 5065
+  },
+  {
+    "id": "amai-kaori-choco-cake",
+    "name": "あまいかおりチョコケーキ",
+    "category": "dessert",
+    "ingredients": [
+      { "ingredientId": "amai-mitsu", "count": 9 },
+      { "ingredientId": "relax-cacao", "count": 8 },
+      { "ingredientId": "moumou-milk", "count": 7 }
+    ],
+    "totalCount": 24,
+    "energy": 3378
+  },
+  {
+    "id": "moumou-hot-milk",
+    "name": "モーモーホットミルク",
+    "category": "dessert",
+    "ingredients": [
+      { "ingredientId": "moumou-milk", "count": 7 }
+    ],
+    "totalCount": 7,
+    "energy": 814
+  },
+  {
+    "id": "karuwaza-soy-cake",
+    "name": "かるわざソイケーキ",
+    "category": "dessert",
+    "ingredients": [
+      { "ingredientId": "tokusen-egg", "count": 8 },
+      { "ingredientId": "wakakusa-daizu", "count": 7 }
+    ],
+    "totalCount": 15,
+    "energy": 1924
+  },
+  {
+    "id": "harikiri-protein-smoothie",
+    "name": "はりきりプロテインスムージー",
+    "category": "dessert",
+    "ingredients": [
+      { "ingredientId": "wakakusa-daizu", "count": 15 },
+      { "ingredientId": "relax-cacao", "count": 8 }
+    ],
+    "totalCount": 23,
+    "energy": 3263
+  },
+  {
+    "id": "maipace-yasai-juice",
+    "name": "マイペースやさいジュース",
+    "category": "dessert",
+    "ingredients": [
+      { "ingredientId": "anmin-tomato", "count": 9 },
+      { "ingredientId": "tokusen-ringo", "count": 7 }
+    ],
+    "totalCount": 16,
+    "energy": 1924
+  },
+  {
+    "id": "ooki-malasada",
+    "name": "おおきいマラサダ",
+    "category": "dessert",
+    "ingredients": [
+      { "ingredientId": "pure-oil", "count": 10 },
+      { "ingredientId": "moumou-milk", "count": 7 },
+      { "ingredientId": "amai-mitsu", "count": 6 }
+    ],
+    "totalCount": 23,
+    "energy": 3015
+  },
+  {
+    "id": "chikaramochi-soy-donuts",
+    "name": "ちからもちソイドーナッツ",
+    "category": "dessert",
+    "ingredients": [
+      { "ingredientId": "pure-oil", "count": 12 },
+      { "ingredientId": "wakakusa-daizu", "count": 16 },
+      { "ingredientId": "relax-cacao", "count": 7 }
+    ],
+    "totalCount": 35,
+    "energy": 5547
+  },
+  {
+    "id": "daibakuhatsu-popcorn",
+    "name": "だいばくはつポップコーン",
+    "category": "dessert",
+    "ingredients": [
+      { "ingredientId": "wakakusa-corn", "count": 15 },
+      { "ingredientId": "pure-oil", "count": 14 },
+      { "ingredientId": "moumou-milk", "count": 7 }
+    ],
+    "totalCount": 36,
+    "energy": 6048
+  },
+  {
+    "id": "ochakai-corn-scone",
+    "name": "おちゃかいコーンスコーン",
+    "category": "dessert",
+    "ingredients": [
+      { "ingredientId": "tokusen-ringo", "count": 20 },
+      { "ingredientId": "attaka-ginger", "count": 20 },
+      { "ingredientId": "wakakusa-corn", "count": 18 },
+      { "ingredientId": "moumou-milk", "count": 9 }
+    ],
+    "totalCount": 67,
+    "energy": 10925
+  },
+  {
+    "id": "hanabira-choco-tart",
+    "name": "はなびらのまいチョコタルト",
+    "category": "dessert",
+    "ingredients": [
+      { "ingredientId": "relax-cacao", "count": 11 },
+      { "ingredientId": "tokusen-ringo", "count": 11 }
+    ],
+    "totalCount": 22,
+    "energy": 3314
+  },
+  {
+    "id": "flower-gift-macarons",
+    "name": "フラワーギフトマカロン",
+    "category": "dessert",
+    "ingredients": [
+      { "ingredientId": "relax-cacao", "count": 25 },
+      { "ingredientId": "tokusen-egg", "count": 25 },
+      { "ingredientId": "amai-mitsu", "count": 17 },
+      { "ingredientId": "moumou-milk", "count": 10 }
+    ],
+    "totalCount": 77,
+    "energy": 13834
+  },
+  {
+    "id": "hayaoki-coffee-jelly",
+    "name": "はやおきコーヒーゼリー",
+    "category": "dessert",
+    "ingredients": [
+      { "ingredientId": "mezamashi-coffee", "count": 16 },
+      { "ingredientId": "moumou-milk", "count": 14 },
+      { "ingredientId": "amai-mitsu", "count": 12 }
+    ],
+    "totalCount": 42,
+    "energy": 6793
+  },
+  {
+    "id": "spark-spice-cola",
+    "name": "スパークスパイスコーラ",
+    "category": "dessert",
+    "ingredients": [
+      { "ingredientId": "tokusen-ringo", "count": 35 },
+      { "ingredientId": "attaka-ginger", "count": 20 },
+      { "ingredientId": "futoi-naganegi", "count": 20 },
+      { "ingredientId": "mezamashi-coffee", "count": 12 }
+    ],
+    "totalCount": 87,
+    "energy": 17494
+  },
+  {
+    "id": "katayaburi-corn-tiramisu",
+    "name": "かたやぶりコーンティラミス",
+    "category": "dessert",
+    "ingredients": [
+      { "ingredientId": "mezamashi-coffee", "count": 14 },
+      { "ingredientId": "wakakusa-corn", "count": 14 },
+      { "ingredientId": "moumou-milk", "count": 12 }
+    ],
+    "totalCount": 40,
+    "energy": 7125
+  },
+  {
+    "id": "dooh-eclair",
+    "name": "ドオーのエクレア",
+    "category": "dessert",
+    "ingredients": [
+      { "ingredientId": "relax-cacao", "count": 30 },
+      { "ingredientId": "moumou-milk", "count": 26 },
+      { "ingredientId": "mezamashi-coffee", "count": 24 },
+      { "ingredientId": "amai-mitsu", "count": 22 }
+    ],
+    "totalCount": 102,
+    "energy": 20885
+  },
+  {
+    "id": "dokidoki-pancake",
+    "name": "ドキドキこわいかおパンケーキ",
+    "category": "dessert",
+    "ingredients": [
+      { "ingredientId": "zussiri-kabocha", "count": 18 },
+      { "ingredientId": "tokusen-egg", "count": 24 },
+      { "ingredientId": "amai-mitsu", "count": 32 },
+      { "ingredientId": "anmin-tomato", "count": 29 }
+    ],
+    "totalCount": 103,
+    "energy": 24354
+  },
+  {
+    "id": "glass-mixer-smoothie",
+    "name": "グラスミキサースムージー",
+    "category": "dessert",
+    "ingredients": [
+      { "ingredientId": "tsuyatsuya-avocado", "count": 18 },
+      { "ingredientId": "anmin-tomato", "count": 16 },
+      { "ingredientId": "moumou-milk", "count": 14 }
+    ],
+    "totalCount": 48,
+    "energy": 8165
+  },
+  {
+    "id": "mitsuatsume-choco-waffle",
+    "name": "みつあつめチョコワッフル",
+    "category": "dessert",
+    "ingredients": [
+      { "ingredientId": "amai-mitsu", "count": 38 },
+      { "ingredientId": "wakakusa-corn", "count": 28 },
+      { "ingredientId": "pure-oil", "count": 28 },
+      { "ingredientId": "relax-cacao", "count": 21 }
+    ],
+    "totalCount": 115,
+    "energy": 25484
+  }
+]
