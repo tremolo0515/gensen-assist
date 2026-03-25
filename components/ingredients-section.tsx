@@ -132,7 +132,7 @@ export function IngredientsSection({
       </CardHeader>
       <CardContent>
         {/* ingredients.map() で食材19件分のチェックボックスをループ生成 */}
-        <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
           {ingredients.map((ingredient) => {
             const isChecked = checkedIngredients.has(ingredient.id)
             return (

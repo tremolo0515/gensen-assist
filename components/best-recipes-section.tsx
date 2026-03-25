@@ -32,7 +32,7 @@ export function BestRecipesSection({ bestRecipes }: BestRecipesSectionProps) {
       </CardHeader>
       <CardContent>
         {/* 3カテゴリを横並びで表示 */}
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           {(["curry", "salad", "dessert"] as const).map((category) => {
             const config = CATEGORY_CONFIG[category]
             const recipe = bestRecipes[category]
