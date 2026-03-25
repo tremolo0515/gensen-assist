@@ -39,6 +39,13 @@ export interface Pokemon {
 
 // --- アプリ内で使う型 ---
 
+// 食材追加でエナジーが上がるカテゴリの情報（展開表示用）
+export interface BestRecipeByCategory {
+  category: 'curry' | 'salad' | 'dessert'
+  recipeName: string
+  energy: number
+}
+
 // 提案1件分（進化系統1グループに対応）
 export interface SuggestionItem {
   groupKey: string           // Reactのkey用識別子（タイプ+食材構成+食材IDの組み合わせ）
@@ -46,9 +53,8 @@ export interface SuggestionItem {
   slot: 'A' | 'B'           // 何枠でこの食材を持つか
   ingredientId: string
   ingredientName: string
-  energyIncrease: number    // 優先度の根拠（追加前後の最大エナジーの差分）
-  newMaxEnergy: number      // この食材を追加した後の最大エナジー
-  bestRecipeName: string    // その最大エナジーレシピ名
+  energyIncrease: number           // 優先度の根拠（カテゴリ別合計エナジーの差分）
+  bestRecipesByCategory: BestRecipeByCategory[]  // 食材追加後にエナジーが上がるカテゴリのレシピ一覧
   priority: 'high' | 'medium' | 'low'
 }
 

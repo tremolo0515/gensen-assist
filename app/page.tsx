@@ -5,8 +5,9 @@ import { Header } from "@/components/header"
 import { PotCapacitySection } from "@/components/pot-capacity-section"
 import { IngredientsSection } from "@/components/ingredients-section"
 import { SuggestionsSection } from "@/components/suggestions-section"
+import { BestRecipesSection } from "@/components/best-recipes-section"
 import { INGREDIENTS } from "@/lib/data"
-import { recommend } from "@/lib/recommend"
+import { recommend, getBestRecipesPerCategory } from "@/lib/recommend"
 
 const STORAGE_KEY_POT = "pokesleep-pot-capacity"
 const STORAGE_KEY_INGREDIENTS = "pokesleep-checked-ingredients"
@@ -66,6 +67,10 @@ export default function Home() {
     ? Math.round(potCapacity * 1.5)
     : potCapacity
 
+  const bestRecipes = useMemo(() => {
+    return getBestRecipesPerCategory(checkedIngredients, effectivePotCapacity)
+  }, [checkedIngredients, effectivePotCapacity])
+
   const suggestions = useMemo(() => {
     return recommend(checkedIngredients, effectivePotCapacity)
   }, [checkedIngredients, effectivePotCapacity])
@@ -97,6 +102,7 @@ export default function Home() {
             onClearAll={clearAllIngredients}
             onSelectAll={selectAllIngredients}
           />
+          <BestRecipesSection bestRecipes={bestRecipes} />
           <SuggestionsSection suggestions={suggestions} />
         </div>
       </div>

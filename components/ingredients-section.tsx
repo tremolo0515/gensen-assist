@@ -71,7 +71,7 @@ export function IngredientsSection({
               厳選済みの食材
             </CardTitle>
             <CardDescription className="mt-1.5">
-              担当ポケモンの厳選が完了した食材にチェックを入れてください
+              厳選が完了した食材にチェックを入れてください
             </CardDescription>
           </div>
           {/* 全選択・全解除ボタンを横並びで配置 */}

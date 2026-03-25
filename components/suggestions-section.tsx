@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { PartyPopper, AlertCircle, ChevronDown } from "lucide-react"
+import { PartyPopper, Trophy, ChevronDown } from "lucide-react"
 import type { SuggestionsResult, SuggestionItem } from "@/lib/types"
 
 // 優先度ごとの表示設定（ラベルとCSSクラス）
@@ -112,20 +112,22 @@ function SuggestionCard({ item }: { item: SuggestionItem }) {
         />
       </div>
 
-      {/* 展開時のみ表示される部分：解放されるレシピ詳細 */}
+      {/* 展開時のみ表示される部分：カテゴリ別に解放されるレシピ */}
       <div
         className={`overflow-hidden transition-all duration-200 ${
-          isExpanded ? "max-h-40 opacity-100" : "max-h-0 opacity-0"
+          isExpanded ? "max-h-60 opacity-100" : "max-h-0 opacity-0"
         }`}
       >
-        <div className="px-3 pb-2 pt-1 border-t border-border/30">
-          <p className="text-xs text-muted-foreground mb-1.5">追加後に作れる最大エナジーレシピ</p>
-          <div className="flex items-center justify-between text-sm bg-background/50 rounded-md px-2 py-1.5">
-            <span className="text-foreground font-medium">{item.bestRecipeName}</span>
-            <span className="text-primary font-semibold">
-              {item.newMaxEnergy.toLocaleString()} エナジー
-            </span>
-          </div>
+        <div className="px-3 pb-2 pt-1 border-t border-border/30 flex flex-col gap-1.5">
+          <p className="text-xs text-muted-foreground">作れるようになるレシピ</p>
+          {item.bestRecipesByCategory.map(({ category, recipeName, energy }) => (
+            <div key={category} className="flex items-center justify-between text-sm bg-background/50 rounded-md px-2 py-1.5">
+              <span className="text-foreground font-medium">{recipeName}</span>
+              <span className="text-primary font-semibold">
+                {energy.toLocaleString()} エナジー
+              </span>
+            </div>
+          ))}
         </div>
       </div>
     </div>
@@ -143,15 +145,15 @@ function CompleteState() {
   )
 }
 
-// 未チェック食材はあるがなべ容量不足などで提案が出ないときに表示
+// 未チェック食材はあるが、追加してもエナジーが増えない（現状で十分強い）ときに表示
 function NoResultsState() {
   return (
     <div className="flex flex-col items-center justify-center py-8 text-center">
-      <AlertCircle className="w-12 h-12 text-warning mb-3" />
+      <Trophy className="w-12 h-12 text-primary mb-3" />
       <p className="text-foreground font-medium">
-        現在のなべ容量では、未厳選の食材が必要なレシピに届きません。
+        ベストなレシピが作成できます！
       </p>
-      <p className="text-sm text-muted-foreground mt-1">なべ容量を上げると提案が表示されます。</p>
+      <p className="text-sm text-muted-foreground mt-1">表示されているレシピを作りながら、なべ容量の拡張を進めましょう</p>
     </div>
   )
 }

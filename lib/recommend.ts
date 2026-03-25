@@ -3,16 +3,36 @@
 // 出力: 優先度付きの提案リスト（SuggestionsResult）
 
 import { INGREDIENTS, POKEMON, RECIPES } from './data'
-import type { Recipe, SuggestionItem, SuggestionsResult } from './types'
+import type { Recipe, SuggestionItem, SuggestionsResult, BestRecipeByCategory } from './types'
 
-// 指定した食材セットとなべ容量で作れるレシピのうち、最大エナジーのものを返す
-function getBestRecipe(checkedIds: Set<string>, potCapacity: number): Recipe | null {
-  const makeable = RECIPES.filter(recipe =>
-    recipe.totalCount <= potCapacity &&
-    recipe.ingredients.every(ri => checkedIds.has(ri.ingredientId))
-  )
-  if (makeable.length === 0) return null
-  return makeable.reduce((a, b) => a.energy > b.energy ? a : b)
+// カテゴリ別の最大エナジーレシピを返す（現在作れるベストレシピ表示用）
+export function getBestRecipesPerCategory(
+  checkedIds: Set<string>,
+  potCapacity: number
+): Record<'curry' | 'salad' | 'dessert', Recipe | null> {
+  const categories = ['curry', 'salad', 'dessert'] as const
+  const result = {} as Record<'curry' | 'salad' | 'dessert', Recipe | null>
+  for (const category of categories) {
+    const makeable = RECIPES.filter(recipe =>
+      recipe.category === category &&
+      recipe.totalCount <= potCapacity &&
+      recipe.ingredients.every(ri => checkedIds.has(ri.ingredientId))
+    )
+    result[category] = makeable.length === 0
+      ? null
+      : makeable.reduce((a, b) => a.energy > b.energy ? a : b)
+  }
+  return result
+}
+
+// カテゴリ別の最大エナジーを合算して返す（推薦スコアの計算に使う）
+// カレー・サラダ・デザートは週替わりで独立しているため、カテゴリをまたいだ比較は意味がない
+function getTotalBestEnergy(
+  perCategory: Record<'curry' | 'salad' | 'dessert', Recipe | null>
+): number {
+  return (perCategory.curry?.energy ?? 0)
+       + (perCategory.salad?.energy ?? 0)
+       + (perCategory.dessert?.energy ?? 0)
 }
 
 export function recommend(
@@ -29,21 +49,32 @@ export function recommend(
     return { type: 'complete', items: [] }
   }
 
-  // 現在の状態で作れる最大エナジー（追加「前」の基準値）
-  const currentBest = getBestRecipe(checkedIngredientIds, potCapacity)
-  const currentMaxEnergy = currentBest?.energy ?? 0
+  // 現在の状態でのカテゴリ別最大エナジーの合計（追加「前」の基準値）
+  const currentPerCategory = getBestRecipesPerCategory(checkedIngredientIds, potCapacity)
+  const currentTotalEnergy = getTotalBestEnergy(currentPerCategory)
 
   const items: Omit<SuggestionItem, 'priority'>[] = []
 
   for (const ingredient of uncheckedIngredients) {
-    // この食材を追加した場合の最大エナジーを計算
+    // この食材を追加した場合のカテゴリ別最大エナジー合計を計算
     const newChecked = new Set([...checkedIngredientIds, ingredient.id])
-    const newBest = getBestRecipe(newChecked, potCapacity)
-    const newMaxEnergy = newBest?.energy ?? 0
-    const energyIncrease = newMaxEnergy - currentMaxEnergy
+    const newPerCategory = getBestRecipesPerCategory(newChecked, potCapacity)
+    const newTotalEnergy = getTotalBestEnergy(newPerCategory)
+    const energyIncrease = newTotalEnergy - currentTotalEnergy
 
     // エナジーが増加しない食材はスキップ
     if (energyIncrease <= 0) continue
+
+    // エナジーが増加したカテゴリのみ、レシピ名とエナジーを展開表示用にまとめる
+    const bestRecipesByCategory: BestRecipeByCategory[] = (
+      ['curry', 'salad', 'dessert'] as const
+    ).filter(cat =>
+      (newPerCategory[cat]?.energy ?? 0) > (currentPerCategory[cat]?.energy ?? 0)
+    ).map(cat => ({
+      category: cat,
+      recipeName: newPerCategory[cat]!.name,
+      energy: newPerCategory[cat]!.energy,
+    }))
 
     // 食材得意（speciality === 'food'）かつ A枠またはB枠にこの食材を持つポケモンを抽出
     const carriers = POKEMON.filter(p =>
@@ -69,8 +100,7 @@ export function recommend(
         ingredientId: ingredient.id,
         ingredientName: ingredient.name,
         energyIncrease,
-        newMaxEnergy,
-        bestRecipeName: newBest!.name,
+        bestRecipesByCategory,
       })
     }
   }
