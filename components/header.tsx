@@ -1,5 +1,6 @@
 import { Moon } from "lucide-react"
 
+// タイトルとサブテキストのみ。props なし・状態なしのシンプルな表示専用部品
 export function Header() {
   return (
     <header className="text-center">

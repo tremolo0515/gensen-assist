@@ -3,9 +3,10 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Slider } from "@/components/ui/slider"
 
+// page.tsx から受け取る props の型定義
 interface PotCapacitySectionProps {
   value: number
-  onChange: (value: number) => void
+  onChange: (value: number) => void // スライダー操作時に page.tsx の setPotCapacity が呼ばれる
 }
 
 export function PotCapacitySection({ value, onChange }: PotCapacitySectionProps) {
@@ -18,10 +19,12 @@ export function PotCapacitySection({ value, onChange }: PotCapacitySectionProps)
         </CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
+        {/* 現在値の表示 */}
         <div className="text-center">
           <span className="text-4xl font-bold text-primary">{value}</span>
           <span className="text-muted-foreground ml-1">/ 81</span>
         </div>
+        {/* スライダー操作 → onChange(新しい値) → page.tsx の potCapacity が更新される */}
         <Slider
           value={[value]}
           onValueChange={([v]) => onChange(v)}

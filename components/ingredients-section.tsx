@@ -15,12 +15,14 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
+import type { Ingredient } from "@/lib/types"
 
+// page.tsx から受け取る props の型定義
 interface IngredientsSectionProps {
-  ingredients: readonly string[]
-  checkedIngredients: Set<string>
-  onToggle: (ingredient: string) => void
-  onClearAll: () => void
+  ingredients: Ingredient[]          // 全19食材（INGREDIENTS定数）
+  checkedIngredients: Set<string>    // チェック済み食材IDの集合
+  onToggle: (ingredientId: string) => void // チェック切り替え時に呼ぶ関数
+  onClearAll: () => void             // 全解除ボタン確認後に呼ぶ関数
 }
 
 export function IngredientsSection({
@@ -29,6 +31,7 @@ export function IngredientsSection({
   onToggle,
   onClearAll,
 }: IngredientsSectionProps) {
+  // 1件もチェックされていないとき全解除ボタンを非活性にするためのフラグ
   const hasChecked = checkedIngredients.size > 0
 
   return (
@@ -44,6 +47,7 @@ export function IngredientsSection({
               担当ポケモンの厳選が完了した食材にチェックを入れてください
             </CardDescription>
           </div>
+          {/* 全解除ボタン：押すと確認ダイアログが開き、OKで onClearAll が呼ばれる */}
           <AlertDialog>
             <AlertDialogTrigger asChild>
               <Button
@@ -72,28 +76,29 @@ export function IngredientsSection({
         </div>
       </CardHeader>
       <CardContent>
+        {/* ingredients.map() で食材19件分のチェックボックスをループ生成 */}
         <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
           {ingredients.map((ingredient) => {
-            const isChecked = checkedIngredients.has(ingredient)
+            const isChecked = checkedIngredients.has(ingredient.id)
             return (
               <label
-                key={ingredient}
+                key={ingredient.id}
                 className={`
                   relative flex items-center gap-2 p-2.5 rounded-lg border cursor-pointer
                   transition-all duration-150 select-none
-                  ${isChecked 
-                    ? "bg-success/15 border-success/40 text-success-foreground" 
+                  ${isChecked
+                    ? "bg-success/15 border-success/40 text-success-foreground"
                     : "bg-muted/30 border-border/50 text-muted-foreground hover:bg-muted/50"
                   }
                 `}
               >
                 <Checkbox
                   checked={isChecked}
-                  onCheckedChange={() => onToggle(ingredient)}
+                  onCheckedChange={() => onToggle(ingredient.id)}
                   className={isChecked ? "border-success data-[state=checked]:bg-success data-[state=checked]:border-success" : ""}
                 />
                 <span className={`text-xs sm:text-sm font-medium leading-tight ${isChecked ? "text-foreground" : ""}`}>
-                  {ingredient}
+                  {ingredient.name}
                 </span>
               </label>
             )
