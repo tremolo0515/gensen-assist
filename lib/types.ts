@@ -21,7 +21,7 @@ export interface Recipe {
   name: string
   category: string
   ingredients: RecipeIngredient[]
-  totalCount: number  // 必要食材の合計個数（鍋容量と比較する）
+  totalCount: number  // 必要食材の合計個数（なべ容量と比較する）
   energy: number
 }
 
@@ -33,26 +33,22 @@ export interface Pokemon {
   ingredient1: string        // A枠（Lv.1から）
   ingredient2: string | null // B枠（Lv.30から）
   ingredient3: string | null // C枠（Lv.60から）。MVPでは使わない
-  speciality: string
+  speciality: string         // "food" | "berry" | "skill"
   limited?: boolean          // ? はオプショナル（ないフィールドがあってもOK）
 }
 
 // --- アプリ内で使う型 ---
 
-// 提案カードに表示するポケモン情報
-export interface SuggestionPokemon {
-  id: string
-  name: string
-  slot: 'A' | 'B'  // A枠かB枠か（C枠は除外済み）
-}
-
-// 提案1件分（食材1つに対応）
+// 提案1件分（進化系統1グループに対応）
 export interface SuggestionItem {
+  groupKey: string           // Reactのkey用識別子（タイプ+食材構成+食材IDの組み合わせ）
+  pokemonNames: string[]     // 進化系統のポケモン名一覧（例: ["ゼニガメ", "カメール", "カメックス"]）
+  slot: 'A' | 'B'           // 何枠でこの食材を持つか
   ingredientId: string
   ingredientName: string
-  maxEnergy: number           // この食材で解放できる最大エナジー（優先度の根拠）
-  maxEnergyRecipeName: string
-  pokemon: SuggestionPokemon[]
+  energyIncrease: number    // 優先度の根拠（追加前後の最大エナジーの差分）
+  newMaxEnergy: number      // この食材を追加した後の最大エナジー
+  bestRecipeName: string    // その最大エナジーレシピ名
   priority: 'high' | 'medium' | 'low'
 }
 

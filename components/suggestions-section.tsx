@@ -70,14 +70,14 @@ function PriorityArea({
       </div>
       <div className="p-3 flex flex-col gap-2">
         {items.map((item) => (
-          <SuggestionCard key={item.ingredientId} item={item} />
+          <SuggestionCard key={item.groupKey} item={item} />
         ))}
       </div>
     </div>
   )
 }
 
-// 食材1件分のカード。タップで開閉するアコーディオン
+// ポケモン1体分のカード。タップで開閉するアコーディオン
 function SuggestionCard({ item }: { item: SuggestionItem }) {
   // isExpanded: カードの開閉状態。このコンポーネント内だけで使うローカルな状態
   const [isExpanded, setIsExpanded] = useState(false)
@@ -89,13 +89,21 @@ function SuggestionCard({ item }: { item: SuggestionItem }) {
           ? "border-primary/40 bg-primary/5"
           : "border-border/50 bg-card/50 hover:bg-card"
       }`}
-      onClick={() => setIsExpanded(!isExpanded)} // タップで true/false を反転
+      onClick={() => setIsExpanded(!isExpanded)}
     >
-      {/* 常に表示される部分：食材名と最大エナジー */}
-      <div className="px-3 py-2 flex items-center gap-3">
-        <span className="font-semibold text-foreground">{item.ingredientName}</span>
+      {/* 常に表示される部分：ポケモン名（進化系統）・枠・食材名・エナジー増加量 */}
+      <div className="px-3 py-2 flex items-center gap-2">
+        <span className="font-semibold text-foreground">
+          {item.pokemonNames.join(' / ')}
+        </span>
+        <span className="text-xs bg-secondary text-secondary-foreground rounded px-1.5 py-0.5 shrink-0">
+          {item.slot === 'A' ? 'AAA' : 'ABB'}
+        </span>
+        <span className="text-sm text-muted-foreground truncate">
+          {item.ingredientName}
+        </span>
         <span className="text-sm text-primary font-medium ml-auto shrink-0">
-          {item.maxEnergy.toLocaleString()} エナジー
+          +{item.energyIncrease.toLocaleString()} エナジー
         </span>
         <ChevronDown
           className={`w-4 h-4 text-muted-foreground shrink-0 transition-transform duration-200 ${
@@ -104,36 +112,19 @@ function SuggestionCard({ item }: { item: SuggestionItem }) {
         />
       </div>
 
-      {/* 展開時のみ表示される部分：レシピ名と担当ポケモン一覧 */}
+      {/* 展開時のみ表示される部分：解放されるレシピ詳細 */}
       <div
         className={`overflow-hidden transition-all duration-200 ${
-          isExpanded ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+          isExpanded ? "max-h-40 opacity-100" : "max-h-0 opacity-0"
         }`}
       >
-        <div className="px-3 pb-3 pt-1 border-t border-border/30 flex flex-col gap-3">
-          <div>
-            <p className="text-xs text-muted-foreground mb-1">解放できる最大エナジーレシピ</p>
-            <div className="flex items-center justify-between text-sm bg-background/50 rounded-md px-2 py-1.5">
-              <span className="text-foreground font-medium">{item.maxEnergyRecipeName}</span>
-              <span className="text-primary font-semibold">
-                {item.maxEnergy.toLocaleString()} エナジー
-              </span>
-            </div>
-          </div>
-
-          <div>
-            <p className="text-xs text-muted-foreground mb-1">担当ポケモン</p>
-            <div className="flex flex-wrap gap-1.5">
-              {item.pokemon.map((p) => (
-                <span
-                  key={p.id}
-                  className="inline-flex items-center gap-1 text-xs bg-secondary rounded-md px-2 py-1"
-                >
-                  <span className="text-muted-foreground">{p.slot}枠</span>
-                  <span className="font-medium">{p.name}</span>
-                </span>
-              ))}
-            </div>
+        <div className="px-3 pb-2 pt-1 border-t border-border/30">
+          <p className="text-xs text-muted-foreground mb-1.5">追加後に作れる最大エナジーレシピ</p>
+          <div className="flex items-center justify-between text-sm bg-background/50 rounded-md px-2 py-1.5">
+            <span className="text-foreground font-medium">{item.bestRecipeName}</span>
+            <span className="text-primary font-semibold">
+              {item.newMaxEnergy.toLocaleString()} エナジー
+            </span>
           </div>
         </div>
       </div>
@@ -152,15 +143,15 @@ function CompleteState() {
   )
 }
 
-// 未チェック食材はあるが鍋容量不足などで提案が出ないときに表示
+// 未チェック食材はあるがなべ容量不足などで提案が出ないときに表示
 function NoResultsState() {
   return (
     <div className="flex flex-col items-center justify-center py-8 text-center">
       <AlertCircle className="w-12 h-12 text-warning mb-3" />
       <p className="text-foreground font-medium">
-        現在の鍋容量では、未厳選の食材が必要なレシピに届きません。
+        現在のなべ容量では、未厳選の食材が必要なレシピに届きません。
       </p>
-      <p className="text-sm text-muted-foreground mt-1">鍋容量を上げると提案が表示されます。</p>
+      <p className="text-sm text-muted-foreground mt-1">なべ容量を上げると提案が表示されます。</p>
     </div>
   )
 }

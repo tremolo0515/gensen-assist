@@ -8,7 +8,7 @@ const _geistMono = Geist_Mono({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: 'ポケスリ厳選サポーター',
-  description: '鍋容量と厳選済み食材を入力して、次に捕まえるべきポケモンを確認しよう',
+  description: 'なべ容量と厳選済み食材を入力して、次に捕まえるべきポケモンを確認しよう',
   generator: 'v0.app',
   icons: {
     icon: [

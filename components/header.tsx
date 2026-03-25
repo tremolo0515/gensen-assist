@@ -11,7 +11,7 @@ export function Header() {
         </h1>
       </div>
       <p className="text-muted-foreground text-sm sm:text-base text-pretty max-w-md mx-auto">
-        鍋容量と厳選済み食材を入力して、次に捕まえるべきポケモンを確認しよう
+        なべ容量と厳選済み食材を入力して、次に捕まえるべきポケモンを確認しよう
       </p>
     </header>
   )

@@ -1,9 +1,19 @@
 // 推薦アルゴリズム。UIを持たない純粋な計算関数
-// 入力: チェック済み食材IDの集合 + 鍋容量
+// 入力: チェック済み食材IDの集合 + なべ容量
 // 出力: 優先度付きの提案リスト（SuggestionsResult）
 
 import { INGREDIENTS, POKEMON, RECIPES } from './data'
-import type { SuggestionItem, SuggestionsResult } from './types'
+import type { Recipe, SuggestionItem, SuggestionsResult } from './types'
+
+// 指定した食材セットとなべ容量で作れるレシピのうち、最大エナジーのものを返す
+function getBestRecipe(checkedIds: Set<string>, potCapacity: number): Recipe | null {
+  const makeable = RECIPES.filter(recipe =>
+    recipe.totalCount <= potCapacity &&
+    recipe.ingredients.every(ri => checkedIds.has(ri.ingredientId))
+  )
+  if (makeable.length === 0) return null
+  return makeable.reduce((a, b) => a.energy > b.energy ? a : b)
+}
 
 export function recommend(
   checkedIngredientIds: Set<string>,
@@ -19,66 +29,67 @@ export function recommend(
     return { type: 'complete', items: [] }
   }
 
-  // Omit<SuggestionItem, 'priority'> = priority を除いた SuggestionItem（後でまとめて付与する）
+  // 現在の状態で作れる最大エナジー（追加「前」の基準値）
+  const currentBest = getBestRecipe(checkedIngredientIds, potCapacity)
+  const currentMaxEnergy = currentBest?.energy ?? 0
+
   const items: Omit<SuggestionItem, 'priority'>[] = []
 
   for (const ingredient of uncheckedIngredients) {
+    // この食材を追加した場合の最大エナジーを計算
+    const newChecked = new Set([...checkedIngredientIds, ingredient.id])
+    const newBest = getBestRecipe(newChecked, potCapacity)
+    const newMaxEnergy = newBest?.energy ?? 0
+    const energyIncrease = newMaxEnergy - currentMaxEnergy
 
-    // この食材を「チェックしたと仮定」したとき新たに作れるレシピを探す
-    const newlyUnlocked = RECIPES.filter(recipe => {
-      // レシピがこの食材を必要としているか（.some = 1つでも一致すれば true）
-      const needsThis = recipe.ingredients.some(
-        ri => ri.ingredientId === ingredient.id
-      )
-      if (!needsThis) return false
+    // エナジーが増加しない食材はスキップ
+    if (energyIncrease <= 0) continue
 
-      // この食材以外の必要食材がすべてチェック済みか（.every = 全件一致で true）
-      const allOthersChecked = recipe.ingredients
-        .filter(ri => ri.ingredientId !== ingredient.id)
-        .every(ri => checkedIngredientIds.has(ri.ingredientId))
-      if (!allOthersChecked) return false
-
-      return recipe.totalCount <= potCapacity
-    })
-
-    if (newlyUnlocked.length === 0) continue
-
-    // 解放されるレシピの中で最大エナジーのものをスコアとする（.reduce = 配列を1値に集約）
-    const bestRecipe = newlyUnlocked.reduce((a, b) =>
-      a.energy > b.energy ? a : b
+    // 食材得意（speciality === 'food'）かつ A枠またはB枠にこの食材を持つポケモンを抽出
+    const carriers = POKEMON.filter(p =>
+      p.speciality === 'food' &&
+      (p.ingredient1 === ingredient.id || p.ingredient2 === ingredient.id)
     )
 
-    // A枠またはB枠にこの食材を持つポケモンを抽出（C枠のみは除外）
-    const carriers = POKEMON
-      .filter(p =>
-        p.ingredient1 === ingredient.id || p.ingredient2 === ingredient.id
-      )
-      .map(p => ({
-        id: p.id,
-        name: p.name,
-        slot: (p.ingredient1 === ingredient.id ? 'A' : 'B') as 'A' | 'B',
-      }))
+    // タイプ + 食材構成が同じポケモンを進化系統としてグループ化
+    // キー例: "みず-moumou-milk-relax-cacao-mame-meat" → ゼニガメ/カメール/カメックス
+    const evolutionGroups = new Map<string, string[]>()
+    for (const pokemon of carriers) {
+      const key = `${pokemon.type}-${pokemon.ingredient1}-${pokemon.ingredient2 ?? ''}-${pokemon.ingredient3 ?? ''}`
+      if (!evolutionGroups.has(key)) evolutionGroups.set(key, [])
+      evolutionGroups.get(key)!.push(pokemon.name)
+    }
 
-    items.push({
-      ingredientId: ingredient.id,
-      ingredientName: ingredient.name,
-      maxEnergy: bestRecipe.energy,
-      maxEnergyRecipeName: bestRecipe.name,
-      pokemon: carriers,
-    })
+    // 進化系統1グループを1件として追加
+    for (const [key, names] of evolutionGroups) {
+      items.push({
+        groupKey: `${key}-${ingredient.id}`,
+        pokemonNames: names,
+        slot: carriers.find(p => evolutionGroups.get(key)!.includes(p.name))!.ingredient1 === ingredient.id ? 'A' : 'B',
+        ingredientId: ingredient.id,
+        ingredientName: ingredient.name,
+        energyIncrease,
+        newMaxEnergy,
+        bestRecipeName: newBest!.name,
+      })
+    }
   }
 
   if (items.length === 0) {
     return { type: 'no-results', items: [] }
   }
 
-  // エナジー降順でソート
-  items.sort((a, b) => b.maxEnergy - a.maxEnergy)
+  // エナジー増加量の降順でソート
+  items.sort((a, b) => b.energyIncrease - a.energyIncrease)
 
-  // 優先度を付与（上位2件: high、3〜4件目: medium、それ以降: low）
-  const itemsWithPriority: SuggestionItem[] = items.map((item, index) => ({
-    ...item, // item の全フィールドをコピーして priority を追加
-    priority: index < 2 ? 'high' : index < 4 ? 'medium' : 'low',
+  // エナジー増加量の異なる値でグループ化して優先度を付与
+  // 1位の食材 → high、2〜3位 → medium、それ以降 → low
+  const uniqueIncreases = [...new Set(items.map(i => i.energyIncrease))].sort((a, b) => b - a)
+  const itemsWithPriority: SuggestionItem[] = items.map(item => ({
+    ...item,
+    priority:
+      uniqueIncreases.indexOf(item.energyIncrease) < 1 ? 'high' :
+      uniqueIncreases.indexOf(item.energyIncrease) < 3 ? 'medium' : 'low',
   }))
 
   return { type: 'suggestions', items: itemsWithPriority }

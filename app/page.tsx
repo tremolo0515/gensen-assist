@@ -10,36 +10,36 @@ import { recommend } from "@/lib/recommend"
 
 const STORAGE_KEY_POT = "pokesleep-pot-capacity"
 const STORAGE_KEY_INGREDIENTS = "pokesleep-checked-ingredients"
+const STORAGE_KEY_TICKET = "pokesleep-good-camp-ticket"
 
 export default function Home() {
   const [potCapacity, setPotCapacity] = useState(15)
   const [checkedIngredients, setCheckedIngredients] = useState<Set<string>>(new Set())
+  const [useGoodCampTicket, setUseGoodCampTicket] = useState(false)
   const [isLoaded, setIsLoaded] = useState(false)
 
   useEffect(() => {
     const savedPot = localStorage.getItem(STORAGE_KEY_POT)
     const savedIngredients = localStorage.getItem(STORAGE_KEY_INGREDIENTS)
+    const savedTicket = localStorage.getItem(STORAGE_KEY_TICKET)
 
-    if (savedPot) {
-      setPotCapacity(parseInt(savedPot, 10))
-    }
-    if (savedIngredients) {
-      setCheckedIngredients(new Set(JSON.parse(savedIngredients)))
-    }
+    if (savedPot) setPotCapacity(parseInt(savedPot, 10))
+    if (savedIngredients) setCheckedIngredients(new Set(JSON.parse(savedIngredients)))
+    if (savedTicket) setUseGoodCampTicket(savedTicket === 'true')
     setIsLoaded(true)
   }, [])
 
   useEffect(() => {
-    if (isLoaded) {
-      localStorage.setItem(STORAGE_KEY_POT, potCapacity.toString())
-    }
+    if (isLoaded) localStorage.setItem(STORAGE_KEY_POT, potCapacity.toString())
   }, [potCapacity, isLoaded])
 
   useEffect(() => {
-    if (isLoaded) {
-      localStorage.setItem(STORAGE_KEY_INGREDIENTS, JSON.stringify([...checkedIngredients]))
-    }
+    if (isLoaded) localStorage.setItem(STORAGE_KEY_INGREDIENTS, JSON.stringify([...checkedIngredients]))
   }, [checkedIngredients, isLoaded])
+
+  useEffect(() => {
+    if (isLoaded) localStorage.setItem(STORAGE_KEY_TICKET, useGoodCampTicket.toString())
+  }, [useGoodCampTicket, isLoaded])
 
   const toggleIngredient = (ingredientId: string) => {
     setCheckedIngredients(prev => {
@@ -57,9 +57,18 @@ export default function Home() {
     setCheckedIngredients(new Set())
   }
 
+  const selectAllIngredients = () => {
+    setCheckedIngredients(new Set(INGREDIENTS.map(i => i.id)))
+  }
+
+  // いいキャンプチケット使用時はなべ容量を1.5倍（四捨五入）
+  const effectivePotCapacity = useGoodCampTicket
+    ? Math.round(potCapacity * 1.5)
+    : potCapacity
+
   const suggestions = useMemo(() => {
-    return recommend(checkedIngredients, potCapacity)
-  }, [checkedIngredients, potCapacity])
+    return recommend(checkedIngredients, effectivePotCapacity)
+  }, [checkedIngredients, effectivePotCapacity])
 
   if (!isLoaded) {
     return (
@@ -71,18 +80,22 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-6 max-w-3xl">
+      <div className="container mx-auto px-4 py-6 max-w-4xl">
         <Header />
         <div className="flex flex-col gap-8 mt-8">
           <PotCapacitySection
             value={potCapacity}
             onChange={setPotCapacity}
+            useGoodCampTicket={useGoodCampTicket}
+            onToggleGoodCampTicket={() => setUseGoodCampTicket(prev => !prev)}
+            effectivePotCapacity={effectivePotCapacity}
           />
           <IngredientsSection
             ingredients={INGREDIENTS}
             checkedIngredients={checkedIngredients}
             onToggle={toggleIngredient}
             onClearAll={clearAllIngredients}
+            onSelectAll={selectAllIngredients}
           />
           <SuggestionsSection suggestions={suggestions} />
         </div>
