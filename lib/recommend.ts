@@ -25,15 +25,6 @@ export function getBestRecipesPerCategory(
   return result
 }
 
-// カテゴリ別の最大エナジーを合算して返す（推薦スコアの計算に使う）
-// カレー・サラダ・デザートは週替わりで独立しているため、カテゴリをまたいだ比較は意味がない
-function getTotalBestEnergy(
-  perCategory: Record<'curry' | 'salad' | 'dessert', Recipe | null>
-): number {
-  return (perCategory.curry?.energy ?? 0)
-       + (perCategory.salad?.energy ?? 0)
-       + (perCategory.dessert?.energy ?? 0)
-}
 
 export function recommend(
   checkedIngredientIds: Set<string>,
@@ -49,37 +40,64 @@ export function recommend(
     return { type: 'complete', items: [] }
   }
 
-  // 現在の状態でのカテゴリ別最大エナジーの合計（追加「前」の基準値）
+  // 現在の状態でのカテゴリ別最大エナジー（追加「前」の基準値）
   const currentPerCategory = getBestRecipesPerCategory(checkedIngredientIds, potCapacity)
-  const currentTotalEnergy = getTotalBestEnergy(currentPerCategory)
 
   const items: Omit<SuggestionItem, 'priority'>[] = []
 
   for (const ingredient of uncheckedIngredients) {
-    // この食材を追加した場合のカテゴリ別最大エナジー合計を計算
-    const newChecked = new Set([...checkedIngredientIds, ingredient.id])
-    const newPerCategory = getBestRecipesPerCategory(newChecked, potCapacity)
-    const newTotalEnergy = getTotalBestEnergy(newPerCategory)
-    const energyIncrease = newTotalEnergy - currentTotalEnergy
+    // カテゴリごとに「この食材を含む最良レシピ」を探索し、スコアを計算する
+    // 他に必要な未チェック食材が多いほど割り引く（1 / (1 + 不足数)）ことで、
+    // 即解放できるレシピを優先しつつ、複数食材が揃うと解放できる高エナジーレシピも考慮する
+    let totalDiscountedScore = 0
+    const bestRecipesByCategory: BestRecipeByCategory[] = [];
 
-    // エナジーが増加しない食材はスキップ
+    for (const cat of ['curry', 'salad', 'dessert'] as const) {
+      const currentBestEnergy = currentPerCategory[cat]?.energy ?? 0
+
+      // この食材を含むレシピのうち、なべ容量内に収まるものを全て取得
+      const candidates = RECIPES.filter(r =>
+        r.category === cat &&
+        r.totalCount <= potCapacity &&
+        r.ingredients.some(ri => ri.ingredientId === ingredient.id)
+      )
+      if (candidates.length === 0) continue
+
+      // 各候補について「他に必要な未チェック食材」を特定し、割引スコアを計算
+      const scored = candidates.map(recipe => {
+        const otherMissingIds = recipe.ingredients
+          .filter(ri => ri.ingredientId !== ingredient.id && !checkedIngredientIds.has(ri.ingredientId))
+          .map(ri => ri.ingredientId)
+        const gain = recipe.energy - currentBestEnergy
+        const discountedGain = gain / (1 + otherMissingIds.length)
+        return { recipe, otherMissingIds, gain, discountedGain }
+      })
+
+      // 割引スコアが最大の候補を選ぶ
+      const best = scored.reduce((a, b) => a.discountedGain >= b.discountedGain ? a : b)
+      if (best.discountedGain <= 0) continue
+
+      totalDiscountedScore += best.discountedGain
+      bestRecipesByCategory.push({
+        category: cat,
+        recipeName: best.recipe.name,
+        energy: best.recipe.energy,
+        energyIncrease: best.gain,
+        missingIngredients: best.otherMissingIds.map(
+          id => INGREDIENTS.find(i => i.id === id)?.name ?? id
+        ),
+      })
+    }
+
+    const energyIncrease = totalDiscountedScore
+
+    // スコアが 0 以下の食材はスキップ
     if (energyIncrease <= 0) continue
 
-    // エナジーが増加したカテゴリのみ、レシピ名とエナジーを展開表示用にまとめる
-    const bestRecipesByCategory: BestRecipeByCategory[] = (
-      ['curry', 'salad', 'dessert'] as const
-    ).filter(cat =>
-      (newPerCategory[cat]?.energy ?? 0) > (currentPerCategory[cat]?.energy ?? 0)
-    ).map(cat => ({
-      category: cat,
-      recipeName: newPerCategory[cat]!.name,
-      energy: newPerCategory[cat]!.energy,
-      energyIncrease: newPerCategory[cat]!.energy - (currentPerCategory[cat]?.energy ?? 0),
-    }))
-
     // 食材得意（speciality === 'food'）かつ A枠またはB枠にこの食材を持つポケモンを抽出
+    // 例外: おいしいしっぽは食材得意ポケモンが存在しないため、得意に関係なく抽出
     const carriers = POKEMON.filter(p =>
-      p.speciality === 'food' &&
+      (p.speciality === 'food' || ingredient.id === 'oishii-shippo') &&
       (p.ingredient1 === ingredient.id || p.ingredient2 === ingredient.id)
     )
 
@@ -110,18 +128,43 @@ export function recommend(
     return { type: 'no-results', items: [] }
   }
 
-  // エナジー増加量の降順でソート
-  items.sort((a, b) => b.energyIncrease - a.energyIncrease)
+  // 第1キー: 即解放できるレシピあり（割引なし）を上位に
+  // 第2キー: エナジー増加量の降順
+  const isImmediate = (item: Omit<SuggestionItem, 'priority'>) =>
+    item.bestRecipesByCategory.some(r => r.missingIngredients.length === 0)
+  items.sort((a, b) => {
+    const immA = isImmediate(a) ? 1 : 0
+    const immB = isImmediate(b) ? 1 : 0
+    if (immB !== immA) return immB - immA
+    return b.energyIncrease - a.energyIncrease
+  })
 
-  // エナジー増加量の異なる値でグループ化して優先度を付与
-  // 1位の食材 → high、2〜3位 → medium、それ以降 → low
+  const hasImmediateUnlock = (item: Omit<SuggestionItem, 'priority'>) =>
+    item.bestRecipesByCategory.some(r => r.missingIngredients.length === 0)
+
+  // 即解放できる食材の中でスコアランクを付けて優先度を決定
+  // 即解放なしはスコアに関わらず medium 以下（high にはならない）
   const uniqueIncreases = [...new Set(items.map(i => i.energyIncrease))].sort((a, b) => b - a)
-  const itemsWithPriority: SuggestionItem[] = items.map(item => ({
-    ...item,
-    priority:
-      uniqueIncreases.indexOf(item.energyIncrease) < 1 ? 'high' :
-      uniqueIncreases.indexOf(item.energyIncrease) < 3 ? 'medium' : 'low',
-  }))
+  const uniqueImmediateIncreases = [
+    ...new Set(items.filter(hasImmediateUnlock).map(i => i.energyIncrease))
+  ].sort((a, b) => b - a)
+
+  const itemsWithPriority: SuggestionItem[] = items.map(item => {
+    if (hasImmediateUnlock(item)) {
+      const rank = uniqueImmediateIncreases.indexOf(item.energyIncrease)
+      const priority = rank < 1 ? 'high' : rank < 3 ? 'medium' : 'low'
+      return { ...item, priority }
+    } else {
+      const rank = uniqueIncreases.indexOf(item.energyIncrease)
+      const priority = rank < 3 ? 'medium' : 'low'
+      return { ...item, priority }
+    }
+  })
+
+  // おいしいしっぽは例外的に常に最低優先度（low）の末尾に固定
+  itemsWithPriority.forEach(item => {
+    if (item.ingredientId === 'oishii-shippo') item.priority = 'low'
+  })
 
   return { type: 'suggestions', items: itemsWithPriority }
 }

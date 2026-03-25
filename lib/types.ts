@@ -44,7 +44,8 @@ export interface BestRecipeByCategory {
   category: 'curry' | 'salad' | 'dessert'
   recipeName: string
   energy: number
-  energyIncrease: number  // このカテゴリ単体での増加量
+  energyIncrease: number       // このカテゴリ単体での実際の増加量
+  missingIngredients: string[] // この食材以外に必要な未チェック食材名（即解放なら空）
 }
 
 // 提案1件分（進化系統1グループに対応）

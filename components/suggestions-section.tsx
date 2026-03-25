@@ -116,14 +116,21 @@ function IngredientGroup({ ingredientName, items }: { ingredientName: string; it
       >
         <div className="mb-1.5 flex flex-col gap-1">
           <p className="text-xs text-muted-foreground">作れるようになるレシピ</p>
-          {recipes.map(({ category, recipeName, energy, energyIncrease }) => (
-            <div key={category} className="flex items-center justify-between text-sm bg-muted/30 rounded-md px-2 py-1.5">
-              <span className="text-foreground font-medium">{recipeName}</span>
-              <div className="text-right shrink-0 ml-2">
-                <span className="text-primary font-semibold">{energy.toLocaleString()}</span>
-                <span className="text-xs text-muted-foreground ml-1">エナジー</span>
-                <span className="text-xs text-success font-medium ml-2">(+{energyIncrease.toLocaleString()})</span>
+          {recipes.map(({ category, recipeName, energy, energyIncrease, missingIngredients }) => (
+            <div key={category} className="flex flex-col bg-muted/30 rounded-md px-2 py-1.5 gap-0.5">
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-foreground font-medium">{recipeName}</span>
+                <div className="text-right shrink-0 ml-2">
+                  <span className="text-primary font-semibold">{energy.toLocaleString()}</span>
+                  <span className="text-xs text-muted-foreground ml-1">エナジー</span>
+                  <span className="text-xs text-success font-medium ml-2">(+{energyIncrease.toLocaleString()})</span>
+                </div>
               </div>
+              {missingIngredients.length > 0 && (
+                <p className="text-xs text-warning-foreground">
+                  他に必要: {missingIngredients.join('・')}
+                </p>
+              )}
             </div>
           ))}
         </div>
