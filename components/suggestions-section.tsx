@@ -5,11 +5,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { PartyPopper, Trophy, ChevronDown } from "lucide-react"
 import type { SuggestionsResult, SuggestionItem } from "@/lib/types"
 
-// 優先度ごとの表示設定（ラベルとCSSクラス）
+// 優先度ごとの表示設定（ラベルと左アクセントラインの色）
 const priorityConfig = {
-  high:   { label: "優先度: 高", headerClass: "bg-destructive/10 border-destructive/30 text-destructive", areaClass: "border-destructive/20" },
-  medium: { label: "優先度: 中", headerClass: "bg-warning/10 border-warning/30 text-warning-foreground", areaClass: "border-warning/20" },
-  low:    { label: "優先度: 低", headerClass: "bg-info/10 border-info/30 text-info", areaClass: "border-info/20" },
+  high:   { label: "優先度: 高", labelClass: "text-destructive",      accentClass: "border-l-destructive" },
+  medium: { label: "優先度: 中", labelClass: "text-warning-foreground", accentClass: "border-l-warning" },
+  low:    { label: "優先度: 低", labelClass: "text-info",              accentClass: "border-l-info" },
 }
 
 // recommend() の結果を受け取り、3パターン（complete/no-results/suggestions）で表示を切り替える
@@ -55,7 +55,7 @@ export function SuggestionsSection({ suggestions }: { suggestions: SuggestionsRe
   )
 }
 
-// 優先度グループの枠。その中に SuggestionCard を並べる
+// 優先度グループの枠。食材ごとにさらにグループ化してカードを並べる
 function PriorityArea({
   config,
   items,
@@ -63,12 +63,74 @@ function PriorityArea({
   config: typeof priorityConfig.high
   items: SuggestionItem[]
 }) {
+  // 同じ食材のポケモンをまとめる（Mapで順序を保持）
+  const byIngredient = new Map<string, SuggestionItem[]>()
+  for (const item of items) {
+    if (!byIngredient.has(item.ingredientId)) byIngredient.set(item.ingredientId, [])
+    byIngredient.get(item.ingredientId)!.push(item)
+  }
+
   return (
-    <div className={`rounded-xl border ${config.areaClass} overflow-hidden`}>
-      <div className={`px-3 py-2 border-b ${config.headerClass} font-semibold text-sm`}>
+    <div className={`border-l-4 pl-3 ${config.accentClass}`}>
+      <p className={`text-xs font-semibold mb-2 ${config.labelClass}`}>
         {config.label}
+      </p>
+      <div className="flex flex-col gap-3">
+        {[...byIngredient.entries()].map(([ingredientId, groupItems]) => (
+          <IngredientGroup
+            key={ingredientId}
+            ingredientName={groupItems[0].ingredientName}
+            items={groupItems}
+          />
+        ))}
       </div>
-      <div className="p-3 flex flex-col gap-2">
+    </div>
+  )
+}
+
+// 食材グループ：食材名クリックでレシピ詳細を展開し、下にポケモンカードを並べる
+function IngredientGroup({ ingredientName, items }: { ingredientName: string; items: SuggestionItem[] }) {
+  const [isExpanded, setIsExpanded] = useState(false)
+  const recipes = items[0].bestRecipesByCategory
+
+  return (
+    <div className="flex flex-col gap-1.5">
+      {/* 食材名（クリックで展開、枠なし） */}
+      <div
+        className="flex items-center gap-1 cursor-pointer select-none"
+        onClick={() => setIsExpanded(!isExpanded)}
+      >
+        <span className="text-xs font-medium text-muted-foreground">{ingredientName}</span>
+        <ChevronDown
+          className={`w-4 h-4 text-muted-foreground shrink-0 transition-transform duration-200 ${
+            isExpanded ? "rotate-180" : ""
+          }`}
+        />
+      </div>
+
+      {/* 展開時：カテゴリ別レシピ詳細 */}
+      <div
+        className={`overflow-hidden transition-all duration-200 ${
+          isExpanded ? "max-h-60 opacity-100" : "max-h-0 opacity-0"
+        }`}
+      >
+        <div className="mb-1.5 flex flex-col gap-1">
+          <p className="text-xs text-muted-foreground">作れるようになるレシピ</p>
+          {recipes.map(({ category, recipeName, energy, energyIncrease }) => (
+            <div key={category} className="flex items-center justify-between text-sm bg-muted/30 rounded-md px-2 py-1.5">
+              <span className="text-foreground font-medium">{recipeName}</span>
+              <div className="text-right shrink-0 ml-2">
+                <span className="text-primary font-semibold">{energy.toLocaleString()}</span>
+                <span className="text-xs text-muted-foreground ml-1">エナジー</span>
+                <span className="text-xs text-success font-medium ml-2">(+{energyIncrease.toLocaleString()})</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ポケモンカード一覧（2列グリッド） */}
+      <div className="grid grid-cols-2 gap-1.5">
         {items.map((item) => (
           <SuggestionCard key={item.groupKey} item={item} />
         ))}
@@ -77,59 +139,16 @@ function PriorityArea({
   )
 }
 
-// ポケモン1体分のカード。タップで開閉するアコーディオン
+// ポケモン1体分のカード（展開なし）
 function SuggestionCard({ item }: { item: SuggestionItem }) {
-  // isExpanded: カードの開閉状態。このコンポーネント内だけで使うローカルな状態
-  const [isExpanded, setIsExpanded] = useState(false)
-
   return (
-    <div
-      className={`rounded-lg border transition-all duration-200 cursor-pointer ${
-        isExpanded
-          ? "border-primary/40 bg-primary/5"
-          : "border-border/50 bg-card/50 hover:bg-card"
-      }`}
-      onClick={() => setIsExpanded(!isExpanded)}
-    >
-      {/* 常に表示される部分：ポケモン名（進化系統）・枠・食材名・エナジー増加量 */}
-      <div className="px-3 py-2 flex items-center gap-2">
-        <span className="font-semibold text-foreground">
-          {item.pokemonNames.join(' / ')}
-        </span>
-        <span className="text-xs bg-secondary text-secondary-foreground rounded px-1.5 py-0.5 shrink-0">
-          {item.slot === 'A' ? 'AAA' : 'ABB'}
-        </span>
-        <span className="text-sm text-muted-foreground truncate">
-          {item.ingredientName}
-        </span>
-        <span className="text-sm text-primary font-medium ml-auto shrink-0">
-          +{item.energyIncrease.toLocaleString()} エナジー
-        </span>
-        <ChevronDown
-          className={`w-4 h-4 text-muted-foreground shrink-0 transition-transform duration-200 ${
-            isExpanded ? "rotate-180" : ""
-          }`}
-        />
-      </div>
-
-      {/* 展開時のみ表示される部分：カテゴリ別に解放されるレシピ */}
-      <div
-        className={`overflow-hidden transition-all duration-200 ${
-          isExpanded ? "max-h-60 opacity-100" : "max-h-0 opacity-0"
-        }`}
-      >
-        <div className="px-3 pb-2 pt-1 border-t border-border/30 flex flex-col gap-1.5">
-          <p className="text-xs text-muted-foreground">作れるようになるレシピ</p>
-          {item.bestRecipesByCategory.map(({ category, recipeName, energy }) => (
-            <div key={category} className="flex items-center justify-between text-sm bg-background/50 rounded-md px-2 py-1.5">
-              <span className="text-foreground font-medium">{recipeName}</span>
-              <span className="text-primary font-semibold">
-                {energy.toLocaleString()} エナジー
-              </span>
-            </div>
-          ))}
-        </div>
-      </div>
+    <div className="rounded-lg border border-border/50 bg-card/50 px-3 py-1.5 flex items-center gap-2">
+      <span className="text-sm font-semibold text-foreground">
+        {item.pokemonNames.join(' / ')}
+      </span>
+      <span className="text-xs bg-secondary text-secondary-foreground rounded px-1.5 py-0.5 shrink-0">
+        {item.slot === 'A' ? 'AAA' : 'ABB'}
+      </span>
     </div>
   )
 }
@@ -153,7 +172,7 @@ function NoResultsState() {
       <p className="text-foreground font-medium">
         ベストなレシピが作成できます！
       </p>
-      <p className="text-sm text-muted-foreground mt-1">表示されているレシピを作りながら、なべ容量の拡張を進めましょう</p>
+      <p className="text-sm text-muted-foreground mt-1">表示されているレシピを作りつつ、なべ容量の拡張を進めましょう</p>
     </div>
   )
 }

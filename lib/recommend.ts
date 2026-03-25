@@ -74,6 +74,7 @@ export function recommend(
       category: cat,
       recipeName: newPerCategory[cat]!.name,
       energy: newPerCategory[cat]!.energy,
+      energyIncrease: newPerCategory[cat]!.energy - (currentPerCategory[cat]?.energy ?? 0),
     }))
 
     // 食材得意（speciality === 'food'）かつ A枠またはB枠にこの食材を持つポケモンを抽出
