@@ -18,28 +18,34 @@ export default function Home() {
   const [checkedIngredients, setCheckedIngredients] = useState<Set<string>>(new Set())
   const [useGoodCampTicket, setUseGoodCampTicket] = useState(false)
   const [isLoaded, setIsLoaded] = useState(false)
+  const [storageBlocked, setStorageBlocked] = useState(false)
 
   useEffect(() => {
-    const savedPot = localStorage.getItem(STORAGE_KEY_POT)
-    const savedIngredients = localStorage.getItem(STORAGE_KEY_INGREDIENTS)
-    const savedTicket = localStorage.getItem(STORAGE_KEY_TICKET)
+    try {
+      const savedPot = localStorage.getItem(STORAGE_KEY_POT)
+      const savedIngredients = localStorage.getItem(STORAGE_KEY_INGREDIENTS)
+      const savedTicket = localStorage.getItem(STORAGE_KEY_TICKET)
 
-    if (savedPot) setPotCapacity(parseInt(savedPot, 10))
-    if (savedIngredients) setCheckedIngredients(new Set(JSON.parse(savedIngredients)))
-    if (savedTicket) setUseGoodCampTicket(savedTicket === 'true')
-    setIsLoaded(true)
+      if (savedPot) setPotCapacity(parseInt(savedPot, 10))
+      if (savedIngredients) setCheckedIngredients(new Set(JSON.parse(savedIngredients)))
+      if (savedTicket) setUseGoodCampTicket(savedTicket === 'true')
+    } catch {
+      setStorageBlocked(true)
+    } finally {
+      setIsLoaded(true)
+    }
   }, [])
 
   useEffect(() => {
-    if (isLoaded) localStorage.setItem(STORAGE_KEY_POT, potCapacity.toString())
+    if (isLoaded) try { localStorage.setItem(STORAGE_KEY_POT, potCapacity.toString()) } catch {}
   }, [potCapacity, isLoaded])
 
   useEffect(() => {
-    if (isLoaded) localStorage.setItem(STORAGE_KEY_INGREDIENTS, JSON.stringify([...checkedIngredients]))
+    if (isLoaded) try { localStorage.setItem(STORAGE_KEY_INGREDIENTS, JSON.stringify([...checkedIngredients])) } catch {}
   }, [checkedIngredients, isLoaded])
 
   useEffect(() => {
-    if (isLoaded) localStorage.setItem(STORAGE_KEY_TICKET, useGoodCampTicket.toString())
+    if (isLoaded) try { localStorage.setItem(STORAGE_KEY_TICKET, useGoodCampTicket.toString()) } catch {}
   }, [useGoodCampTicket, isLoaded])
 
   const toggleIngredient = (ingredientId: string) => {
@@ -85,6 +91,13 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-background">
+      {storageBlocked && (
+        <div className="bg-warning/10 border-b border-warning/30 px-4 py-2 text-center">
+          <p className="text-xs text-warning-foreground">
+            ブラウザの設定により入力内容が保存されません。ページを閉じると入力がリセットされます。
+          </p>
+        </div>
+      )}
       <div className="container mx-auto px-4 py-6 max-w-4xl">
         <Header />
         <div className="flex flex-col gap-8 mt-8">
