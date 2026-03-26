@@ -107,9 +107,14 @@ export function recommend(
       (p.ingredient1 === ingredient.id || p.ingredient2 === ingredient.id)
     )
 
+    // バリヤード/マネネ系 と ウツボット系は食材配列が完全一致するため、
+    // この2グループだけ例外的にタイプもキーに含めて別カードにする
+    const TYPE_KEY_EXCEPTION_IDS = new Set(['madatsubomi', 'utsudon', 'utsubot', 'bariyado', 'manene'])
+
     const evolutionGroups = new Map<string, string[]>()
     for (const pokemon of carriers) {
-      const key = `${pokemon.type}-${pokemon.ingredient1}-${pokemon.ingredient2 ?? ''}-${pokemon.ingredient3 ?? ''}`
+      const typePrefix = TYPE_KEY_EXCEPTION_IDS.has(pokemon.id) ? `${pokemon.type}-` : ''
+      const key = `${typePrefix}${pokemon.ingredient1}-${pokemon.ingredient2 ?? ''}-${pokemon.ingredient3 ?? ''}`
       if (!evolutionGroups.has(key)) evolutionGroups.set(key, [])
       evolutionGroups.get(key)!.push(pokemon.name)
     }
