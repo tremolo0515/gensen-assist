@@ -12,7 +12,9 @@ interface PotCapacitySectionProps {
   onChange: (value: number) => void
   useGoodCampTicket: boolean
   onToggleGoodCampTicket: () => void
-  effectivePotCapacity: number  // チケット適用後のなべ容量（1.5倍・四捨五入済み）
+  useSundayPot: boolean
+  onToggleSundayPot: () => void
+  effectivePotCapacity: number  // 全トグル適用後のなべ容量
 }
 
 export function PotCapacitySection({
@@ -20,6 +22,8 @@ export function PotCapacitySection({
   onChange,
   useGoodCampTicket,
   onToggleGoodCampTicket,
+  useSundayPot,
+  onToggleSundayPot,
   effectivePotCapacity,
 }: PotCapacitySectionProps) {
   return (
@@ -31,24 +35,36 @@ export function PotCapacitySection({
         </CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
-        {/* いいキャンプチケットのトグル（スライダーより上） */}
-        <div className="flex items-center justify-end gap-2">
-          <Label htmlFor="good-camp-ticket" className="cursor-pointer text-xs text-muted-foreground">
-            🎫 いいキャンプチケット
-          </Label>
-          <Switch
-            id="good-camp-ticket"
-            checked={useGoodCampTicket}
-            onCheckedChange={onToggleGoodCampTicket}
-          />
+        {/* トグル2つを横並び（キャンプチケット左・日曜ボーナス右） */}
+        <div className="flex items-center justify-end gap-4">
+          <div className="flex items-center gap-2">
+            <Label htmlFor="good-camp-ticket" className="cursor-pointer text-xs text-muted-foreground">
+              🎫 いいキャンプチケット
+            </Label>
+            <Switch
+              id="good-camp-ticket"
+              checked={useGoodCampTicket}
+              onCheckedChange={onToggleGoodCampTicket}
+            />
+          </div>
+          <div className="flex items-center gap-2">
+            <Label htmlFor="sunday-pot" className="cursor-pointer text-xs text-muted-foreground">
+              📅 日曜ボーナス
+            </Label>
+            <Switch
+              id="sunday-pot"
+              checked={useSundayPot}
+              onCheckedChange={onToggleSundayPot}
+            />
+          </div>
         </div>
 
         {/* なべ容量の表示。チケットON時は「現在値 → 適用後」の形式で表示 */}
         <div className="flex items-center justify-center gap-2">
-          <span className={`font-bold text-primary ${useGoodCampTicket ? "text-2xl opacity-40" : "text-4xl"}`}>
+          <span className={`font-bold text-primary ${(useGoodCampTicket || useSundayPot) ? "text-2xl opacity-40" : "text-4xl"}`}>
             {value}
           </span>
-          {useGoodCampTicket && (
+          {(useGoodCampTicket || useSundayPot) && (
             <>
               <ArrowRight className="w-5 h-5 text-muted-foreground" />
               <span className="text-4xl font-bold text-primary">{effectivePotCapacity}</span>

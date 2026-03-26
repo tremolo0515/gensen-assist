@@ -12,11 +12,13 @@ import { recommend, getBestRecipesPerCategory } from "@/lib/recommend"
 const STORAGE_KEY_POT = "pokesleep-pot-capacity"
 const STORAGE_KEY_INGREDIENTS = "pokesleep-checked-ingredients"
 const STORAGE_KEY_TICKET = "pokesleep-good-camp-ticket"
+const STORAGE_KEY_SUNDAY = "pokesleep-sunday-pot"
 
 export default function Home() {
   const [potCapacity, setPotCapacity] = useState(15)
   const [checkedIngredients, setCheckedIngredients] = useState<Set<string>>(new Set())
   const [useGoodCampTicket, setUseGoodCampTicket] = useState(false)
+  const [useSundayPot, setUseSundayPot] = useState(false)
   const [isLoaded, setIsLoaded] = useState(false)
   const [storageBlocked, setStorageBlocked] = useState(false)
 
@@ -25,10 +27,12 @@ export default function Home() {
       const savedPot = localStorage.getItem(STORAGE_KEY_POT)
       const savedIngredients = localStorage.getItem(STORAGE_KEY_INGREDIENTS)
       const savedTicket = localStorage.getItem(STORAGE_KEY_TICKET)
+      const savedSunday = localStorage.getItem(STORAGE_KEY_SUNDAY)
 
       if (savedPot) setPotCapacity(parseInt(savedPot, 10))
       if (savedIngredients) setCheckedIngredients(new Set(JSON.parse(savedIngredients)))
       if (savedTicket) setUseGoodCampTicket(savedTicket === 'true')
+      if (savedSunday) setUseSundayPot(savedSunday === 'true')
     } catch {
       setStorageBlocked(true)
     } finally {
@@ -47,6 +51,10 @@ export default function Home() {
   useEffect(() => {
     if (isLoaded) try { localStorage.setItem(STORAGE_KEY_TICKET, useGoodCampTicket.toString()) } catch {}
   }, [useGoodCampTicket, isLoaded])
+
+  useEffect(() => {
+    if (isLoaded) try { localStorage.setItem(STORAGE_KEY_SUNDAY, useSundayPot.toString()) } catch {}
+  }, [useSundayPot, isLoaded])
 
   const toggleIngredient = (ingredientId: string) => {
     setCheckedIngredients(prev => {
@@ -68,10 +76,9 @@ export default function Home() {
     setCheckedIngredients(new Set(INGREDIENTS.map(i => i.id)))
   }
 
-  // いいキャンプチケット使用時はなべ容量を1.5倍（四捨五入）
-  const effectivePotCapacity = useGoodCampTicket
-    ? Math.round(potCapacity * 1.5)
-    : potCapacity
+  // 計算順: なべ容量 × ウィークエンドボーナス × いいキャンプチケット → 四捨五入
+  // (wikiより: イベント→ウィークエンド→料理パワーアップ→チケットの順。四捨五入はチケット適用後に1回)
+  const effectivePotCapacity = Math.round(potCapacity * (useSundayPot ? 2 : 1) * (useGoodCampTicket ? 1.5 : 1))
 
   const bestRecipes = useMemo(() => {
     return getBestRecipesPerCategory(checkedIngredients, effectivePotCapacity)
@@ -106,6 +113,8 @@ export default function Home() {
             onChange={setPotCapacity}
             useGoodCampTicket={useGoodCampTicket}
             onToggleGoodCampTicket={() => setUseGoodCampTicket(prev => !prev)}
+            useSundayPot={useSundayPot}
+            onToggleSundayPot={() => setUseSundayPot(prev => !prev)}
             effectivePotCapacity={effectivePotCapacity}
           />
           <IngredientsSection
