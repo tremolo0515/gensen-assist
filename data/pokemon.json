@@ -215,5 +215,7 @@
   { "id": "kokodora",       "name": "ココドラ",              "type": "はがね",   "ingredient1": "mame-meat",         "ingredient2": "mezamashi-coffee",  "ingredient3": "wakakusa-daizu",    "speciality": "food" },
   { "id": "kodora",         "name": "コドラ",               "type": "はがね",   "ingredient1": "mame-meat",         "ingredient2": "mezamashi-coffee",  "ingredient3": "wakakusa-daizu",    "speciality": "food" },
   { "id": "bossgodora",     "name": "ボスゴドラ",             "type": "はがね",   "ingredient1": "mame-meat",         "ingredient2": "mezamashi-coffee",  "ingredient3": "wakakusa-daizu",    "speciality": "food" },
-  { "id": "manene",         "name": "マネネ",               "type": "エスパー", "ingredient1": "anmin-tomato",      "ingredient2": "hokkori-potato",    "ingredient3": "futoi-naganegi",    "speciality": "food" }
+  { "id": "manene",         "name": "マネネ",               "type": "エスパー", "ingredient1": "anmin-tomato",      "ingredient2": "hokkori-potato",    "ingredient3": "futoi-naganegi",    "speciality": "food" },
+  { "id": "onbat",          "name": "オンバット",            "type": "ドラゴン", "ingredient1": "tokusen-ringo",     "ingredient2": "futoi-naganegi",    "ingredient3": "mame-meat",         "speciality": "skill" },
+  { "id": "onvern",         "name": "オンバーン",            "type": "ドラゴン", "ingredient1": "tokusen-ringo",     "ingredient2": "futoi-naganegi",    "ingredient3": "mame-meat",         "speciality": "skill" }
 ]

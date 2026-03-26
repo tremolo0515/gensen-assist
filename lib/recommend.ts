@@ -4,6 +4,7 @@
 
 import { INGREDIENTS, POKEMON, RECIPES } from './data'
 import type { Recipe, SuggestionItem, SuggestionsResult, BestRecipeByCategory } from './types'
+import { SAME_INGREDIENT_SEPARATE_IDS, NON_FOOD_SPECIALIST_INGREDIENTS, ALWAYS_LOW_PRIORITY_INGREDIENTS } from './exceptions'
 
 // カテゴリ別の最大エナジーレシピを返す（現在作れるベストレシピ表示用）
 export function getBestRecipesPerCategory(
@@ -103,17 +104,13 @@ export function recommend(
     // 食材得意（speciality === 'food'）かつ A枠またはB枠に持つポケモンが対象
     // 例外: おいしいしっぽは食材得意ポケモンが存在しないため得意を問わず抽出
     const carriers = POKEMON.filter(p =>
-      (p.speciality === 'food' || ingredient.id === 'oishii-shippo') &&
+      (p.speciality === 'food' || NON_FOOD_SPECIALIST_INGREDIENTS.has(ingredient.id)) &&
       (p.ingredient1 === ingredient.id || p.ingredient2 === ingredient.id)
     )
 
-    // バリヤード/マネネ系 と ウツボット系は食材配列が完全一致するため、
-    // この2グループだけ例外的にタイプもキーに含めて別カードにする
-    const TYPE_KEY_EXCEPTION_IDS = new Set(['madatsubomi', 'utsudon', 'utsubot', 'bariyado', 'manene'])
-
     const evolutionGroups = new Map<string, string[]>()
     for (const pokemon of carriers) {
-      const typePrefix = TYPE_KEY_EXCEPTION_IDS.has(pokemon.id) ? `${pokemon.type}-` : ''
+      const typePrefix = SAME_INGREDIENT_SEPARATE_IDS.has(pokemon.id) ? `${pokemon.type}-` : ''
       const key = `${typePrefix}${pokemon.ingredient1}-${pokemon.ingredient2 ?? ''}-${pokemon.ingredient3 ?? ''}`
       if (!evolutionGroups.has(key)) evolutionGroups.set(key, [])
       evolutionGroups.get(key)!.push(pokemon.name)
@@ -138,7 +135,7 @@ export function recommend(
 
   // ── Step 4: ソート ────────────────────────────────────────────────────
   // おいしいしっぽは常に low 固定のため即解放扱いにしない
-  const isAlwaysLow = (item: Omit<SuggestionItem, 'priority'>) => item.ingredientId === 'oishii-shippo'
+  const isAlwaysLow = (item: Omit<SuggestionItem, 'priority'>) => ALWAYS_LOW_PRIORITY_INGREDIENTS.has(item.ingredientId)
   const hasImmediateUnlock = (item: Omit<SuggestionItem, 'priority'>) =>
     ingredientImmediateMap.get(item.ingredientId) ?? false
 
