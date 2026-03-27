@@ -13,13 +13,18 @@ const INGREDIENT_NAME: Record<string, string> = Object.fromEntries(
 function IngredientImage({ id, count }: { id: string; count: number }) {
   return (
     <div className="flex items-center gap-1">
-      <img
-        src={`/ingredients/${id}.png`}
-        alt={INGREDIENT_NAME[id] ?? id}
-        width={52}
-        height={52}
-        className="object-contain w-13 h-13 shrink-0"
-      />
+      <div className="relative group w-13 h-13 shrink-0">
+        <img
+          src={`/ingredients/${id}.png`}
+          alt={INGREDIENT_NAME[id] ?? id}
+          width={52}
+          height={52}
+          className="object-contain w-13 h-13"
+        />
+        <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 hidden group-hover:block bg-popover/90 rounded px-1.5 py-0.5 text-[10px] text-center pointer-events-none z-10 leading-tight whitespace-nowrap shadow-sm">
+          {INGREDIENT_NAME[id] ?? id}
+        </span>
+      </div>
       <span className="text-sm text-muted-foreground font-medium">×{count}</span>
     </div>
   )

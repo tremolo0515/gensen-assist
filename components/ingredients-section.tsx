@@ -97,7 +97,7 @@ export function IngredientsSection({
                 key={ingredient.id}
                 onClick={() => onToggle(ingredient.id)}
                 className={`
-                  aspect-square rounded-lg p-1.5 transition-all duration-150 select-none cursor-pointer
+                  relative group aspect-square rounded-lg p-1.5 transition-all duration-150 select-none cursor-pointer
                   ${isChecked
                     ? "bg-success/30 ring-2 ring-success/60"
                     : "bg-muted/30 opacity-40"
@@ -111,6 +111,9 @@ export function IngredientsSection({
                   height={48}
                   className="object-contain w-full h-full"
                 />
+                <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 hidden group-hover:block bg-popover/90 rounded px-1.5 py-0.5 text-[10px] text-center pointer-events-none z-10 leading-tight whitespace-nowrap shadow-sm">
+                  {ingredient.name}
+                </span>
               </button>
             )
           })}

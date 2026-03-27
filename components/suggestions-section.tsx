@@ -160,7 +160,7 @@ function PokemonImage({ name, imageFile, slot }: { name: string; imageFile: stri
   const [showInfo, setShowInfo] = useState(false)
   return (
     <button
-      className="relative flex items-center justify-center cursor-pointer"
+      className="relative group flex items-center justify-center cursor-pointer"
       style={{ width: 52, height: 52 }}
       onClick={() => setShowInfo(v => !v)}
     >
@@ -169,11 +169,19 @@ function PokemonImage({ name, imageFile, slot }: { name: string; imageFile: stri
       ) : (
         <div className="w-12 h-12 flex items-center justify-center text-xs text-muted-foreground bg-muted rounded-full">?</div>
       )}
+      {/* タップで表示（スマホ用） */}
       {showInfo && (
         <div className="absolute inset-0 flex flex-col items-center justify-center bg-popover/90 rounded text-[10px] text-center pointer-events-none z-10">
           <p className="text-foreground leading-tight">{name}</p>
           <p className="text-muted-foreground">{slot === 'A' ? 'AAA' : 'ABB'}</p>
         </div>
+      )}
+      {/* ホバーで表示（PC用） */}
+      {!showInfo && (
+        <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 hidden group-hover:block bg-popover/90 rounded px-1.5 py-0.5 text-[10px] text-center pointer-events-none z-20 leading-tight whitespace-nowrap shadow-sm">
+          <span className="block text-foreground">{name}</span>
+          <span className="block text-muted-foreground">{slot === 'A' ? 'AAA' : 'ABB'}</span>
+        </span>
       )}
     </button>
   )
