@@ -88,7 +88,7 @@ export function BestRecipesSection({ bestRecipes }: BestRecipesSectionProps) {
                       </p>
                     </div>
                     {/* 必要食材を画像+個数で2列グリッド表示 */}
-                    <div className="grid grid-cols-2 gap-x-2 gap-y-1 mt-0.5 mx-auto w-fit">
+                    <div className="grid grid-cols-2 gap-x-8 gap-y-1 mt-0.5 mx-auto w-fit">
                       {recipe.ingredients.map(ri => (
                         <IngredientImage key={ri.ingredientId} id={ri.ingredientId} count={ri.count} />
                       ))}

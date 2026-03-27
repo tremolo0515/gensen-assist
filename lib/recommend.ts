@@ -79,17 +79,26 @@ export function recommend(
       })
 
       const best = scored.reduce((a, b) => a.discountedGain >= b.discountedGain ? a : b)
-      // bestとは別に、この食材だけで即解放できるレシピが1つでもあるか記録
-      if (scored.some(s => s.otherMissingIds.length === 0 && s.gain > 0)) ingredientHasImmediateUnlock = true
       if (best.discountedGain <= 0) continue
+
+      // 即解放できるレシピ（他の不足食材なし・gain>0）が存在するか記録
+      const immediateUnlocks = scored.filter(s => s.otherMissingIds.length === 0 && s.gain > 0)
+      if (immediateUnlocks.length > 0) ingredientHasImmediateUnlock = true
+
+      // 表示するレシピ: 即解放できるものがあればその中で最高エナジーを優先。
+      // なければ discountedGain 最大のレシピ（best）を使う。
+      // こうすることで「なぜ優先度高なのか」を展開表示で説明できる。
+      const display = immediateUnlocks.length > 0
+        ? immediateUnlocks.reduce((a, b) => a.recipe.energy >= b.recipe.energy ? a : b)
+        : best
 
       totalDiscountedScore += best.discountedGain
       bestRecipesByCategory.push({
         category: cat,
-        recipeName: best.recipe.name,
-        energy: best.recipe.energy,
-        energyIncrease: best.gain,
-        missingIngredients: best.otherMissingIds.map(
+        recipeName: display.recipe.name,
+        energy: display.recipe.energy,
+        energyIncrease: display.gain,
+        missingIngredients: display.otherMissingIds.map(
           id => INGREDIENTS.find(i => i.id === id)?.name ?? id
         ),
       })
