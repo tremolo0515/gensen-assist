@@ -42,6 +42,10 @@ export const CATEGORY_BG: Record<string, string> = Object.fromEntries(
   Object.entries(CATEGORY_CONFIG).map(([k, v]) => [k, v.bgClass])
 )
 
+export const CATEGORY_EMOJI: Record<string, string> = Object.fromEntries(
+  Object.entries(CATEGORY_CONFIG).map(([k, v]) => [k, v.emoji])
+)
+
 interface BestRecipesSectionProps {
   // カテゴリ → いま作れる最大レシピ（作れない場合は null）
   bestRecipes: Record<'curry' | 'salad' | 'dessert', Recipe | null>

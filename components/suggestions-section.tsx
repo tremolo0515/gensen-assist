@@ -4,7 +4,7 @@ import { useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { PartyPopper, Trophy, ChevronDown } from "lucide-react"
 import type { SuggestionsResult, SuggestionItem } from "@/lib/types"
-import { CATEGORY_BG } from "@/components/best-recipes-section"
+import { CATEGORY_BG, CATEGORY_EMOJI } from "@/components/best-recipes-section"
 
 // 優先度ごとの表示設定（ラベルと左アクセントラインの色）
 const priorityConfig = {
@@ -128,7 +128,10 @@ function IngredientGroup({ ingredientName, items }: { ingredientName: string; it
           {recipes.map(({ category, recipeName, energy, energyIncrease, missingIngredients }) => (
             <div key={category} className={`flex flex-col rounded-md px-2 py-1.5 gap-0.5 ${CATEGORY_BG[category] ?? 'bg-muted/30'}`}>
               <div className="flex items-center justify-between text-sm">
-                <span className="text-foreground font-medium">{recipeName}</span>
+                <span className="flex items-start gap-1 text-foreground text-xs font-normal">
+                  <span className="shrink-0">{CATEGORY_EMOJI[category]}</span>
+                  <span>{recipeName}</span>
+                </span>
                 <div className="text-right shrink-0 ml-2">
                   <span className="text-primary font-semibold">{energy.toLocaleString()}</span>
                   <span className="text-xs text-muted-foreground ml-1">エナジー</span>
