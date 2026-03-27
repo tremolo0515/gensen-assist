@@ -1,6 +1,6 @@
 "use client"
 
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { RotateCcw, CheckCheck } from "lucide-react"
 import {
@@ -43,9 +43,6 @@ export function IngredientsSection({
         <CardTitle className="flex items-center gap-2 text-lg font-semibold">
           厳選済みの食材
         </CardTitle>
-        <CardDescription className="mt-1.5">
-          厳選が完了した食材を選択してください
-        </CardDescription>
       </CardHeader>
       <CardContent>
         <div className="max-w-xs sm:max-w-sm mx-auto w-full flex flex-col gap-2">
