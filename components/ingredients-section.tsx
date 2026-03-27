@@ -2,7 +2,6 @@
 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
 import { RotateCcw, CheckCheck } from "lucide-react"
 import {
   AlertDialog,
@@ -16,29 +15,6 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import type { Ingredient } from "@/lib/types"
-
-// 食材ID → 絵文字のマッピング（表示専用）
-const INGREDIENT_EMOJI: Record<string, string> = {
-  "amai-mitsu":          "🍯",
-  "anmin-tomato":        "🍅",
-  "hokkori-potato":      "🥔",
-  "attaka-ginger":       "🫚",
-  "relax-cacao":         "🍫",
-  "gekikara-herb":       "🌿",
-  "pure-oil":            "🫙",
-  "mame-meat":           "🍖",
-  "moumou-milk":         "🥛",
-  "tokusen-egg":         "🥚",
-  "tokusen-ringo":       "🍎",
-  "ajiwai-kinoko":       "🍄",
-  "futoi-naganegi":      "🥬",
-  "oishii-shippo":       "🦎",
-  "wakakusa-daizu":      "🫘",
-  "wakakusa-corn":       "🌽",
-  "mezamashi-coffee":    "☕️",
-  "zussiri-kabocha":     "🎃",
-  "tsuyatsuya-avocado":  "🥑",
-}
 
 // page.tsx から受け取る props の型定義
 interface IngredientsSectionProps {
@@ -64,26 +40,20 @@ export function IngredientsSection({
   return (
     <Card className="border-border/50 shadow-sm">
       <CardHeader className="pb-3">
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <CardTitle className="flex items-center gap-2 text-lg font-semibold">
-              <span className="text-xl" role="img" aria-label="チェック">✅</span>
-              厳選済みの食材
-            </CardTitle>
-            <CardDescription className="mt-1.5">
-              厳選が完了した食材にチェックを入れてください
-            </CardDescription>
-          </div>
-          {/* 全選択・全解除ボタンを横並びで配置 */}
-          <div className="flex gap-2 shrink-0">
-            {/* 全選択ボタン：押すと確認ダイアログが開き、OKで onSelectAll が呼ばれる */}
+        <CardTitle className="flex items-center gap-2 text-lg font-semibold">
+          厳選済みの食材
+        </CardTitle>
+        <CardDescription className="mt-1.5">
+          厳選が完了した食材を選択してください
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="max-w-xs sm:max-w-sm mx-auto w-full flex flex-col gap-2">
+          {/* 全選択・全解除ボタンをグリッドの右端に揃える */}
+          <div className="flex gap-2 justify-end">
             <AlertDialog>
               <AlertDialogTrigger asChild>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  disabled={allChecked}
-                >
+                <Button variant="outline" size="sm" disabled={allChecked}>
                   <CheckCheck className="w-4 h-4 mr-1.5" />
                   全選択
                 </Button>
@@ -101,67 +71,53 @@ export function IngredientsSection({
                 </AlertDialogFooter>
               </AlertDialogContent>
             </AlertDialog>
-            {/* 全解除ボタン：押すと確認ダイアログが開き、OKで onClearAll が呼ばれる */}
             <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button
-                variant="outline"
-                size="sm"
-                disabled={!hasChecked}
-                className="shrink-0"
-              >
-                <RotateCcw className="w-4 h-4 mr-1.5" />
-                全解除
-              </Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>チェックをすべて解除しますか？</AlertDialogTitle>
-                <AlertDialogDescription>
-                  すべての食材のチェックが解除されます。この操作は元に戻せません。
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>キャンセル</AlertDialogCancel>
-                <AlertDialogAction onClick={onClearAll}>解除する</AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button variant="outline" size="sm" disabled={!hasChecked}>
+                  <RotateCcw className="w-4 h-4 mr-1.5" />
+                  全解除
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>チェックをすべて解除しますか？</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    すべての食材のチェックが解除されます。この操作は元に戻せません。
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>キャンセル</AlertDialogCancel>
+                  <AlertDialogAction onClick={onClearAll}>解除する</AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           </div>
-        </div>
-      </CardHeader>
-      <CardContent>
-        {/* ingredients.map() で食材19件分のチェックボックスをループ生成 */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
+        <div className="grid grid-cols-5 gap-2">
           {ingredients.map((ingredient) => {
             const isChecked = checkedIngredients.has(ingredient.id)
             return (
-              <label
+              <button
                 key={ingredient.id}
+                onClick={() => onToggle(ingredient.id)}
                 className={`
-                  relative flex items-center gap-1.5 p-2.5 rounded-lg border cursor-pointer
-                  transition-all duration-150 select-none
+                  aspect-square rounded-lg p-1.5 transition-all duration-150 select-none cursor-pointer
                   ${isChecked
-                    ? "bg-success/15 border-success/40 text-success-foreground"
-                    : "bg-muted/30 border-border/50 text-muted-foreground hover:bg-muted/50"
+                    ? "bg-success/30 ring-2 ring-success/60"
+                    : "bg-muted/30 opacity-40"
                   }
                 `}
               >
-                <Checkbox
-                  checked={isChecked}
-                  onCheckedChange={() => onToggle(ingredient.id)}
-                  className={isChecked ? "border-success data-[state=checked]:bg-success data-[state=checked]:border-success" : ""}
+                <img
+                  src={`/ingredients/${ingredient.id}.png`}
+                  alt={ingredient.name}
+                  width={48}
+                  height={48}
+                  className="object-contain w-full h-full"
                 />
-                <span className="text-base leading-none shrink-0">{INGREDIENT_EMOJI[ingredient.id]}</span>
-                <span className={`text-xs sm:text-sm font-medium leading-tight ${isChecked ? "text-foreground" : ""}`}>
-                  {ingredient.name}
-                </span>
-              </label>
+              </button>
             )
           })}
         </div>
-        <div className="mt-4 text-center text-sm text-muted-foreground">
-          {checkedIngredients.size} / {ingredients.length} 完了
         </div>
       </CardContent>
     </Card>

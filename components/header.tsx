@@ -21,7 +21,7 @@ const NOTICES = [
   },
   {
     title: "おいしいシッポは常に優先度「低」で表示します",
-    body: "おいしいシッポを担当する食材とくいのポケモンは存在しないため参考情報としてヤドン系列を表示します。優先度は常に「低」です。",
+    body: "おいしいシッポを担当する食材とくいのポケモンは存在しないため参考情報としてヤドン系列を表示します。優先度は常に「低」です「。",
   },
 ]
 
@@ -45,7 +45,7 @@ export function Header() {
         </button>
       </div>
       <p className="text-muted-foreground text-sm sm:text-base text-pretty max-w-md mx-auto">
-        なべ容量と厳選済み食材を入力して、次に捕まえるべきポケモンを確認しよう
+        なべ容量と厳選済み食材を入力して、次に厳選するポケモンを確認しよう
       </p>
 
       <Dialog open={open} onOpenChange={setOpen}>

@@ -35,6 +35,7 @@ export interface Pokemon {
   ingredient3: string | null // C枠（Lv.60から）。MVPでは使わない
   speciality: string         // "food" | "berry" | "skill"
   limited?: boolean          // ? はオプショナル（ないフィールドがあってもOK）
+  imageFile?: string         // 画像ファイル名（例: "001.png"）。/public/pokemon/ 以下に配置
 }
 
 // --- アプリ内で使う型 ---
@@ -52,6 +53,7 @@ export interface BestRecipeByCategory {
 export interface SuggestionItem {
   groupKey: string           // Reactのkey用識別子（タイプ+食材構成+食材IDの組み合わせ）
   pokemonNames: string[]     // 進化系統のポケモン名一覧（例: ["ゼニガメ", "カメール", "カメックス"]）
+  pokemonImages: (string | undefined)[]  // 各ポケモンの画像ファイル名（imageFileと対応）
   slot: 'A' | 'B'           // 何枠でこの食材を持つか
   ingredientId: string
   ingredientName: string

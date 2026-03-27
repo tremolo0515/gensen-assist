@@ -117,10 +117,12 @@ export function recommend(
     }
 
     for (const [key, names] of evolutionGroups) {
+      const groupCarriers = carriers.filter(p => names.includes(p.name))
       items.push({
         groupKey: `${key}-${ingredient.id}`,
         pokemonNames: names,
-        slot: carriers.find(p => evolutionGroups.get(key)!.includes(p.name))!.ingredient1 === ingredient.id ? 'A' : 'B',
+        pokemonImages: groupCarriers.map(p => p.imageFile),
+        slot: groupCarriers[0].ingredient1 === ingredient.id ? 'A' : 'B',
         ingredientId: ingredient.id,
         ingredientName: ingredient.name,
         energyIncrease: totalDiscountedScore,

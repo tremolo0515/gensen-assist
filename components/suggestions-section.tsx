@@ -4,6 +4,7 @@ import { useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { PartyPopper, Trophy, ChevronDown } from "lucide-react"
 import type { SuggestionsResult, SuggestionItem } from "@/lib/types"
+import { CATEGORY_BG } from "@/components/best-recipes-section"
 
 // 優先度ごとの表示設定（ラベルと左アクセントラインの色）
 const priorityConfig = {
@@ -27,8 +28,7 @@ export function SuggestionsSection({ suggestions }: { suggestions: SuggestionsRe
     <Card className="border-border/50 shadow-sm">
       <CardHeader className="pb-3">
         <CardTitle className="flex items-center gap-2 text-lg font-semibold">
-          <span className="text-xl" role="img" aria-label="ターゲット">🎯</span>
-          次に厳選すべきポケモン
+          厳選おすすめポケモン
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -88,10 +88,19 @@ function PriorityArea({
   )
 }
 
-// 食材グループ：食材名クリックでレシピ詳細を展開し、下にポケモンカードを並べる
+// 食材グループ：食材名クリックでレシピ詳細を展開し、下にポケモン画像を並べる
 function IngredientGroup({ ingredientName, items }: { ingredientName: string; items: SuggestionItem[] }) {
   const [isExpanded, setIsExpanded] = useState(false)
   const recipes = items[0].bestRecipesByCategory
+
+  // 進化系統グループを解体して個別ポケモンのリストにフラット化
+  const allPokemon = items.flatMap(item =>
+    item.pokemonNames.map((name, i) => ({
+      name,
+      imageFile: item.pokemonImages[i],
+      slot: item.slot,
+    }))
+  )
 
   return (
     <div className="flex flex-col gap-1.5">
@@ -117,7 +126,7 @@ function IngredientGroup({ ingredientName, items }: { ingredientName: string; it
         <div className="mb-1.5 flex flex-col gap-1">
           <p className="text-xs text-muted-foreground">作れるようになるレシピ</p>
           {recipes.map(({ category, recipeName, energy, energyIncrease, missingIngredients }) => (
-            <div key={category} className="flex flex-col bg-muted/30 rounded-md px-2 py-1.5 gap-0.5">
+            <div key={category} className={`flex flex-col rounded-md px-2 py-1.5 gap-0.5 ${CATEGORY_BG[category] ?? 'bg-muted/30'}`}>
               <div className="flex items-center justify-between text-sm">
                 <span className="text-foreground font-medium">{recipeName}</span>
                 <div className="text-right shrink-0 ml-2">
@@ -136,27 +145,37 @@ function IngredientGroup({ ingredientName, items }: { ingredientName: string; it
         </div>
       </div>
 
-      {/* ポケモンカード一覧（2列グリッド） */}
-      <div className="grid grid-cols-2 gap-1.5">
-        {items.map((item) => (
-          <SuggestionCard key={item.groupKey} item={item} />
+      {/* ポケモン画像一覧（横並び・折り返し） */}
+      <div className="flex flex-wrap gap-1">
+        {allPokemon.map((p) => (
+          <PokemonImage key={p.name} name={p.name} imageFile={p.imageFile} slot={p.slot} />
         ))}
       </div>
     </div>
   )
 }
 
-// ポケモン1体分のカード（展開なし）
-function SuggestionCard({ item }: { item: SuggestionItem }) {
+// ポケモン1体分の画像。タップで名前と食材配列を表示
+function PokemonImage({ name, imageFile, slot }: { name: string; imageFile: string | undefined; slot: 'A' | 'B' }) {
+  const [showInfo, setShowInfo] = useState(false)
   return (
-    <div className="rounded-lg border border-border/50 bg-card/50 px-3 py-1.5 flex items-center gap-2">
-      <span className="text-sm font-semibold text-foreground">
-        {item.pokemonNames.join(' / ')}
-      </span>
-      <span className="text-xs bg-secondary text-secondary-foreground rounded px-1.5 py-0.5 shrink-0">
-        {item.slot === 'A' ? 'AAA' : 'ABB'}
-      </span>
-    </div>
+    <button
+      className="relative flex items-center justify-center cursor-pointer"
+      style={{ width: 52, height: 52 }}
+      onClick={() => setShowInfo(v => !v)}
+    >
+      {imageFile ? (
+        <img src={`/pokemon/${imageFile}`} alt={name} width={52} height={52} className="object-contain" />
+      ) : (
+        <div className="w-12 h-12 flex items-center justify-center text-xs text-muted-foreground bg-muted rounded-full">?</div>
+      )}
+      {showInfo && (
+        <div className="absolute inset-0 flex flex-col items-center justify-center bg-popover/90 rounded text-[10px] text-center pointer-events-none z-10">
+          <p className="text-foreground leading-tight">{name}</p>
+          <p className="text-muted-foreground">{slot === 'A' ? 'AAA' : 'ABB'}</p>
+        </div>
+      )}
+    </button>
   )
 }
 

@@ -30,7 +30,6 @@ export function PotCapacitySection({
     <Card className="border-border/50 shadow-sm">
       <CardHeader className="pb-3">
         <CardTitle className="flex items-center gap-2 text-lg font-semibold">
-          <span className="text-xl" role="img" aria-label="鍋">🍳</span>
           現在のなべ容量
         </CardTitle>
       </CardHeader>
@@ -39,7 +38,7 @@ export function PotCapacitySection({
         <div className="flex items-center justify-end gap-4">
           <div className="flex items-center gap-2">
             <Label htmlFor="good-camp-ticket" className="cursor-pointer text-xs text-muted-foreground">
-              🎫 いいキャンプチケット
+              キャンチケ1.5倍
             </Label>
             <Switch
               id="good-camp-ticket"
@@ -49,7 +48,7 @@ export function PotCapacitySection({
           </div>
           <div className="flex items-center gap-2">
             <Label htmlFor="sunday-pot" className="cursor-pointer text-xs text-muted-foreground">
-              📅 日曜ボーナス
+              日曜2倍
             </Label>
             <Switch
               id="sunday-pot"

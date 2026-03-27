@@ -107,7 +107,7 @@ export default function Home() {
       )}
       <div className="container mx-auto px-4 py-6 max-w-4xl">
         <Header />
-        <div className="flex flex-col gap-8 mt-8">
+        <div className="flex flex-col gap-4 mt-4">
           <PotCapacitySection
             value={potCapacity}
             onChange={setPotCapacity}
@@ -127,6 +127,26 @@ export default function Home() {
           <BestRecipesSection bestRecipes={bestRecipes} />
           <SuggestionsSection suggestions={suggestions} />
         </div>
+        <footer className="mt-10 pb-6 text-center space-y-1">
+          <p className="text-[10px] text-muted-foreground/60 leading-relaxed">
+            ©2023 Pokémon. ©1995-2023 Nintendo/Creatures Inc./GAME FREAK inc. Pokémon Sleep is developed by SELECT BUTTON inc.
+          </p>
+          <p className="text-[10px] text-muted-foreground/60 leading-relaxed">
+            ポケットモンスター・Pokémonの著作権及び商標は株式会社任天堂・クリーチャーズ・ゲームフリークに帰属します。
+          </p>
+          <p className="text-[10px] text-muted-foreground/60 leading-relaxed">
+            本ツールで使用している画像・データの一部はポケスリwiki（wikiwiki.jp/poke_sleep）より引用しており、当該コンテンツの権利は株式会社ウキウキに帰属します。
+          </p>
+          <p className="text-[10px] text-muted-foreground/60 leading-relaxed">
+            その他引用のコンテンツの権利はそれぞれの出典元に帰属します。
+          </p>
+          <p className="text-[10px] text-muted-foreground/60 leading-relaxed mt-2">
+            作者の
+            <a href="https://x.com/ikkyu_pokesle" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-muted-foreground transition-colors mx-1">X (Twitter)</a>
+            /
+            <a href="https://stoic-dojo.com" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-muted-foreground transition-colors ml-1">ブログ</a>
+          </p>
+        </footer>
       </div>
     </main>
   )
