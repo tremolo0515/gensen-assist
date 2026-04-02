@@ -12,20 +12,20 @@ const INGREDIENT_NAME: Record<string, string> = Object.fromEntries(
 // 食材画像コンポーネント（IDから /ingredients/{id}.png を参照）
 function IngredientImage({ id, count }: { id: string; count: number }) {
   return (
-    <div className="flex items-center gap-1">
-      <div className="relative group w-13 h-13 shrink-0">
+    <div className="flex items-center gap-0.5">
+      <div className="relative group w-6 h-6 shrink-0">
         <img
           src={`/ingredients/${id}.png`}
           alt={INGREDIENT_NAME[id] ?? id}
-          width={52}
-          height={52}
-          className="object-contain w-13 h-13"
+          width={24}
+          height={24}
+          className="object-contain w-6 h-6"
         />
         <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 hidden group-hover:block bg-popover/90 rounded px-1.5 py-0.5 text-[10px] text-center pointer-events-none z-10 leading-tight whitespace-nowrap shadow-sm">
           {INGREDIENT_NAME[id] ?? id}
         </span>
       </div>
-      <span className="text-sm text-muted-foreground font-medium">×{count}</span>
+      <span className="text-[10px] text-muted-foreground font-medium">×{count}</span>
     </div>
   )
 }
@@ -54,21 +54,21 @@ interface BestRecipesSectionProps {
 export function BestRecipesSection({ bestRecipes }: BestRecipesSectionProps) {
   return (
     <Card className="border-border/50 shadow-sm">
-      <CardHeader className="pb-3">
-        <CardTitle className="flex items-center gap-2 text-lg font-semibold">
+      <CardHeader className="pb-2">
+        <CardTitle className="flex items-center gap-2 text-base font-semibold">
           いま作れる最大レシピ
         </CardTitle>
       </CardHeader>
       <CardContent>
         {/* 3カテゴリを横並びで表示 */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
           {(["curry", "salad", "dessert"] as const).map((category) => {
             const config = CATEGORY_CONFIG[category]
             const recipe = bestRecipes[category]
             return (
               <div
                 key={category}
-                className={`flex flex-col rounded-lg border border-border/50 p-3 gap-1.5 ${config.bgClass}`}
+                className={`flex flex-col rounded-lg border border-border/50 p-2 gap-1 ${config.bgClass}`}
               >
                 {/* カテゴリ名 */}
                 <div className="text-xs font-semibold text-muted-foreground flex items-center gap-1">
@@ -78,21 +78,21 @@ export function BestRecipesSection({ bestRecipes }: BestRecipesSectionProps) {
                 {recipe ? (
                   <>
                     {/* レシピ名 */}
-                    <p className="text-sm font-medium text-foreground leading-tight">
+                    <p className="text-xs font-medium text-foreground leading-tight">
                       {recipe.name}
                     </p>
                     {/* エナジーと食材合計個数を同じ行に表示 */}
                     <div className="flex items-baseline justify-between">
-                      <p className="text-lg font-bold text-primary">
+                      <p className="text-base font-bold text-primary">
                         {recipe.energy.toLocaleString()}
-                        <span className="text-sm font-normal text-muted-foreground ml-1">エナジー</span>
+                        <span className="text-xs font-normal text-muted-foreground ml-1">エナジー</span>
                       </p>
-                      <p className="text-sm text-muted-foreground">
+                      <p className="text-xs text-muted-foreground">
                         合計 <span className="font-medium">{recipe.totalCount}個</span>
                       </p>
                     </div>
-                    {/* 必要食材を画像+個数で2列グリッド表示 */}
-                    <div className="grid grid-cols-2 gap-x-8 gap-y-1 mt-0.5 mx-auto w-fit">
+                    {/* 必要食材を画像+個数で横並び表示 */}
+                    <div className="flex flex-row flex-wrap gap-x-2 gap-y-0.5 mt-0.5">
                       {recipe.ingredients.map(ri => (
                         <IngredientImage key={ri.ingredientId} id={ri.ingredientId} count={ri.count} />
                       ))}

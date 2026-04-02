@@ -8,9 +8,9 @@ import { CATEGORY_BG, CATEGORY_EMOJI } from "@/components/best-recipes-section"
 
 // 優先度ごとの表示設定（ラベルと左アクセントラインの色）
 const priorityConfig = {
-  high:   { label: "優先度: 高", labelClass: "text-destructive",      accentClass: "border-l-destructive" },
-  medium: { label: "優先度: 中", labelClass: "text-warning-foreground", accentClass: "border-l-warning" },
-  low:    { label: "優先度: 低", labelClass: "text-info",              accentClass: "border-l-info" },
+  high:   { shortLabel: "S", labelClass: "text-destructive",       barClass: "bg-destructive" },
+  medium: { shortLabel: "A", labelClass: "text-warning",            barClass: "bg-warning" },
+  low:    { shortLabel: "B", labelClass: "text-info",               barClass: "bg-info" },
 }
 
 // recommend() の結果を受け取り、3パターン（complete/no-results/suggestions）で表示を切り替える
@@ -71,11 +71,13 @@ function PriorityArea({
   }
 
   return (
-    <div className={`border-l-4 pl-3 ${config.accentClass}`}>
-      <p className={`text-xs font-semibold mb-2 ${config.labelClass}`}>
-        {config.label}
-      </p>
-      <div className="flex flex-col gap-3">
+    <div className="flex gap-3">
+      {/* 縦バー + 短いラベル */}
+      <div className="flex flex-col items-center gap-0.5 shrink-0">
+        <span className={`text-[9px] font-bold ${config.labelClass}`}>{config.shortLabel}</span>
+        <div className={`flex-1 w-0.5 rounded-full ${config.barClass}`} />
+      </div>
+      <div className="flex flex-wrap gap-x-4 gap-y-3">
         {[...byIngredient.entries()].map(([ingredientId, groupItems]) => (
           <IngredientGroup
             key={ingredientId}
@@ -93,37 +95,46 @@ function IngredientGroup({ ingredientName, items }: { ingredientName: string; it
   const [isExpanded, setIsExpanded] = useState(false)
   const recipes = items[0].bestRecipesByCategory
 
-  // 進化系統グループを解体して個別ポケモンのリストにフラット化
-  const allPokemon = items.flatMap(item =>
-    item.pokemonNames.map((name, i) => ({
-      name,
-      imageFile: item.pokemonImages[i],
-      slot: item.slot,
-    }))
-  )
-
   return (
-    <div className="flex flex-col gap-1.5">
-      {/* 食材名（クリックで展開、枠なし） */}
+    <div className="relative flex flex-col gap-1 border border-border/40 rounded-lg pl-2 pr-5 pt-3 pb-1 min-w-28">
+      {/* 食材画像ラベル（枠線左上） */}
+      <div className="absolute -top-2.5 -left-1.5">
+        <div className="relative group w-6 h-6 shrink-0">
+          <img
+            src={`/ingredients/${items[0].ingredientId}.png`}
+            alt={ingredientName}
+            width={24}
+            height={24}
+            className="object-contain w-6 h-6"
+          />
+          <span className="absolute left-1/2 top-full mt-1 -translate-x-1/2 hidden group-hover:block bg-popover/90 rounded px-1.5 py-0.5 text-[10px] pointer-events-none z-10 leading-tight whitespace-nowrap shadow-sm">
+            {ingredientName}
+          </span>
+        </div>
+      </div>
+
+      {/* 展開矢印（枠内右上） */}
       <div
-        className="flex items-center gap-1 cursor-pointer select-none"
+        className="absolute top-1 right-1 cursor-pointer select-none"
         onClick={() => setIsExpanded(!isExpanded)}
       >
-        <span className="text-xs font-medium text-muted-foreground">{ingredientName}</span>
         <ChevronDown
-          className={`w-4 h-4 text-muted-foreground shrink-0 transition-transform duration-200 ${
+          className={`w-3 h-3 text-muted-foreground transition-transform duration-200 ${
             isExpanded ? "rotate-180" : ""
           }`}
         />
       </div>
 
-      {/* 展開時：カテゴリ別レシピ詳細 */}
-      <div
-        className={`overflow-hidden transition-all duration-200 ${
-          isExpanded ? "max-h-60 opacity-100" : "max-h-0 opacity-0"
-        }`}
-      >
-        <div className="mb-1.5 flex flex-col gap-1">
+      {/* 進化系統グループ */}
+      <div className="flex flex-wrap gap-2">
+        {items.map((item) => (
+          <EvolutionGroup key={item.groupKey} item={item} />
+        ))}
+      </div>
+
+      {/* 展開時：カテゴリ別レシピ詳細（手前に浮かせてレイアウトに影響させない） */}
+      {isExpanded && (
+        <div className="absolute left-0 top-full mt-1 z-50 w-80 flex flex-col gap-1 rounded-lg border border-border/50 bg-popover p-2 shadow-md">
           <p className="text-xs text-muted-foreground">作れるようになるレシピ</p>
           {recipes.map(({ category, recipeName, energy, energyIncrease, missingIngredients }) => (
             <div key={category} className={`flex flex-col rounded-md px-2 py-1.5 gap-0.5 ${CATEGORY_BG[category] ?? 'bg-muted/30'}`}>
@@ -146,14 +157,32 @@ function IngredientGroup({ ingredientName, items }: { ingredientName: string; it
             </div>
           ))}
         </div>
-      </div>
+      )}
+    </div>
+  )
+}
 
-      {/* ポケモン画像一覧（横並び・折り返し） */}
-      <div className="flex flex-wrap gap-1">
-        {allPokemon.map((p) => (
-          <PokemonImage key={p.name} name={p.name} imageFile={p.imageFile} slot={p.slot} />
-        ))}
-      </div>
+const POKEMON_SIZE = 36
+const STACK_OFFSET_X = 32
+const STACK_OFFSET_Y = 0
+
+// 進化系統グループ：同じ系統のポケモンを少しずつずらして重ねて表示
+function EvolutionGroup({ item }: { item: SuggestionItem }) {
+  const count = item.pokemonNames.length
+  const totalWidth = POKEMON_SIZE + (count - 1) * STACK_OFFSET_X
+  const totalHeight = POKEMON_SIZE + (count - 1) * STACK_OFFSET_Y
+
+  return (
+    <div className="relative shrink-0" style={{ width: totalWidth, height: totalHeight }}>
+      {item.pokemonNames.map((name, i) => (
+        <div
+          key={name}
+          className="absolute"
+          style={{ left: i * STACK_OFFSET_X, top: i * STACK_OFFSET_Y, zIndex: count - 1 - i }}
+        >
+          <PokemonImage name={name} imageFile={item.pokemonImages[i]} slot={item.slot} />
+        </div>
+      ))}
     </div>
   )
 }
@@ -164,13 +193,13 @@ function PokemonImage({ name, imageFile, slot }: { name: string; imageFile: stri
   return (
     <button
       className="relative group flex items-center justify-center cursor-pointer"
-      style={{ width: 52, height: 52 }}
+      style={{ width: POKEMON_SIZE, height: POKEMON_SIZE }}
       onClick={() => setShowInfo(v => !v)}
     >
       {imageFile ? (
-        <img src={`/pokemon/${imageFile}`} alt={name} width={52} height={52} className="object-contain" />
+        <img src={`/pokemon/${imageFile}`} alt={name} width={POKEMON_SIZE} height={POKEMON_SIZE} className="object-contain" />
       ) : (
-        <div className="w-12 h-12 flex items-center justify-center text-xs text-muted-foreground bg-muted rounded-full">?</div>
+        <div className="w-10 h-10 flex items-center justify-center text-xs text-muted-foreground bg-muted rounded-full">?</div>
       )}
       {/* タップで表示（スマホ用） */}
       {showInfo && (

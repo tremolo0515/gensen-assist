@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect, useMemo } from "react"
+import { ChevronRight } from "lucide-react"
 import { Header } from "@/components/header"
 import { PotCapacitySection } from "@/components/pot-capacity-section"
 import { IngredientsSection } from "@/components/ingredients-section"
@@ -105,27 +106,41 @@ export default function Home() {
           </p>
         </div>
       )}
-      <div className="container mx-auto px-4 py-6 max-w-4xl">
+      <div className="container mx-auto px-4 py-6 max-w-4xl lg:max-w-6xl">
         <Header />
-        <div className="flex flex-col gap-4 mt-4">
-          <PotCapacitySection
-            value={potCapacity}
-            onChange={setPotCapacity}
-            useGoodCampTicket={useGoodCampTicket}
-            onToggleGoodCampTicket={() => setUseGoodCampTicket(prev => !prev)}
-            useSundayPot={useSundayPot}
-            onToggleSundayPot={() => setUseSundayPot(prev => !prev)}
-            effectivePotCapacity={effectivePotCapacity}
-          />
-          <IngredientsSection
-            ingredients={INGREDIENTS}
-            checkedIngredients={checkedIngredients}
-            onToggle={toggleIngredient}
-            onClearAll={clearAllIngredients}
-            onSelectAll={selectAllIngredients}
-          />
-          <BestRecipesSection bestRecipes={bestRecipes} />
-          <SuggestionsSection suggestions={suggestions} />
+        <div className="mt-4 flex flex-col lg:flex-row lg:items-start">
+          {/* 左カラム：入力 */}
+          <div className="flex flex-col gap-2 lg:flex-1 lg:min-w-0">
+            <PotCapacitySection
+              value={potCapacity}
+              onChange={setPotCapacity}
+              useGoodCampTicket={useGoodCampTicket}
+              onToggleGoodCampTicket={() => setUseGoodCampTicket(prev => !prev)}
+              useSundayPot={useSundayPot}
+              onToggleSundayPot={() => setUseSundayPot(prev => !prev)}
+              effectivePotCapacity={effectivePotCapacity}
+            />
+            <IngredientsSection
+              ingredients={INGREDIENTS}
+              checkedIngredients={checkedIngredients}
+              onToggle={toggleIngredient}
+              onClearAll={clearAllIngredients}
+              onSelectAll={selectAllIngredients}
+            />
+          </div>
+
+          {/* セパレーター（PC のみ表示） */}
+          <div className="hidden lg:flex flex-col items-center self-stretch px-5 py-6">
+            <div className="flex-1 w-px bg-linear-to-b from-transparent via-border to-transparent" />
+            <ChevronRight className="my-2 w-4 h-4 text-muted-foreground/35 shrink-0" />
+            <div className="flex-1 w-px bg-linear-to-b from-transparent via-border to-transparent" />
+          </div>
+
+          {/* 右カラム：出力 */}
+          <div className="flex flex-col gap-2 lg:flex-2 lg:min-w-0 mt-4 lg:mt-0">
+            <BestRecipesSection bestRecipes={bestRecipes} />
+            <SuggestionsSection suggestions={suggestions} />
+          </div>
         </div>
         <footer className="mt-10 pb-6 text-center space-y-1">
           <p className="text-[10px] text-muted-foreground/60 leading-relaxed">
