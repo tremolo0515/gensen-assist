@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Slider } from "@/components/ui/slider"
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
-import { ArrowRight } from "lucide-react"
+import { ArrowRight, Minus, Plus } from "lucide-react"
 
 // page.tsx から受け取る props の型定義
 interface PotCapacitySectionProps {
@@ -73,14 +73,30 @@ export function PotCapacitySection({
         </div>
 
         {/* スライダー操作 → onChange(新しい値) → page.tsx の potCapacity が更新される */}
-        <Slider
-          value={[value]}
-          onValueChange={([v]) => onChange(v)}
-          min={15}
-          max={81}
-          step={3}
-          className="w-full"
-        />
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => onChange(Math.max(15, value - 3))}
+            disabled={value <= 15}
+            className="w-8 h-8 rounded-full border border-border flex items-center justify-center text-muted-foreground hover:bg-muted transition-colors disabled:opacity-30 disabled:cursor-not-allowed shrink-0"
+          >
+            <Minus className="w-3.5 h-3.5" />
+          </button>
+          <Slider
+            value={[value]}
+            onValueChange={([v]) => onChange(v)}
+            min={15}
+            max={81}
+            step={3}
+            className="flex-1"
+          />
+          <button
+            onClick={() => onChange(Math.min(81, value + 3))}
+            disabled={value >= 81}
+            className="w-8 h-8 rounded-full border border-border flex items-center justify-center text-muted-foreground hover:bg-muted transition-colors disabled:opacity-30 disabled:cursor-not-allowed shrink-0"
+          >
+            <Plus className="w-3.5 h-3.5" />
+          </button>
+        </div>
         <div className="flex justify-between text-xs text-muted-foreground">
           <span>15</span>
           <span>81</span>
