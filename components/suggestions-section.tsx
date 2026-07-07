@@ -162,8 +162,8 @@ function IngredientGroup({ ingredientName, items }: { ingredientName: string; it
   )
 }
 
-const POKEMON_SIZE = 36
-const STACK_OFFSET_X = 32
+const POKEMON_SIZE = 44
+const STACK_OFFSET_X = 40
 const STACK_OFFSET_Y = 0
 
 // 進化系統グループ：同じ系統のポケモンを少しずつずらして重ねて表示

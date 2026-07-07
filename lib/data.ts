@@ -17,3 +17,9 @@ export const RECIPES: Recipe[] = [
   ...recipesSaladData,
   ...recipesDessertData,
 ].filter(r => r.energy > 0) as Recipe[]
+
+// メインスキル「料理パワーアップ」のレベル別なべ容量増加量。index = スキルレベル（0は未使用）
+export const COOKING_POWER_UP_BONUS = [0, 7, 10, 12, 17, 22, 27, 31]
+
+// メインスキル「料理パワーアップ・マイナス」のレベル別なべ容量増加量。index = スキルレベル（0は未使用）
+export const COOKING_POWER_UP_MINUS_BONUS = [0, 5, 7, 9, 12, 16, 20, 24]

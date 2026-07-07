@@ -7,19 +7,27 @@ import { PotCapacitySection } from "@/components/pot-capacity-section"
 import { IngredientsSection } from "@/components/ingredients-section"
 import { SuggestionsSection } from "@/components/suggestions-section"
 import { BestRecipesSection } from "@/components/best-recipes-section"
-import { INGREDIENTS } from "@/lib/data"
+import { INGREDIENTS, COOKING_POWER_UP_BONUS, COOKING_POWER_UP_MINUS_BONUS } from "@/lib/data"
 import { recommend, getBestRecipesPerCategory } from "@/lib/recommend"
 
 const STORAGE_KEY_POT = "pokesleep-pot-capacity"
 const STORAGE_KEY_INGREDIENTS = "pokesleep-checked-ingredients"
 const STORAGE_KEY_TICKET = "pokesleep-good-camp-ticket"
 const STORAGE_KEY_SUNDAY = "pokesleep-sunday-pot"
+const STORAGE_KEY_POWERUP_LEVEL = "pokesleep-cooking-powerup-level"
+const STORAGE_KEY_POWERUP_COUNT = "pokesleep-cooking-powerup-count"
+const STORAGE_KEY_POWERUP_MINUS_LEVEL = "pokesleep-cooking-powerup-minus-level"
+const STORAGE_KEY_POWERUP_MINUS_COUNT = "pokesleep-cooking-powerup-minus-count"
 
 export default function Home() {
   const [potCapacity, setPotCapacity] = useState(15)
   const [checkedIngredients, setCheckedIngredients] = useState<Set<string>>(new Set())
   const [useGoodCampTicket, setUseGoodCampTicket] = useState(false)
   const [useSundayPot, setUseSundayPot] = useState(false)
+  const [cookingPowerUpLevel, setCookingPowerUpLevel] = useState(1)
+  const [cookingPowerUpCount, setCookingPowerUpCount] = useState(0)
+  const [cookingPowerUpMinusLevel, setCookingPowerUpMinusLevel] = useState(1)
+  const [cookingPowerUpMinusCount, setCookingPowerUpMinusCount] = useState(0)
   const [isLoaded, setIsLoaded] = useState(false)
   const [storageBlocked, setStorageBlocked] = useState(false)
 
@@ -29,11 +37,19 @@ export default function Home() {
       const savedIngredients = localStorage.getItem(STORAGE_KEY_INGREDIENTS)
       const savedTicket = localStorage.getItem(STORAGE_KEY_TICKET)
       const savedSunday = localStorage.getItem(STORAGE_KEY_SUNDAY)
+      const savedPowerUpLevel = localStorage.getItem(STORAGE_KEY_POWERUP_LEVEL)
+      const savedPowerUpCount = localStorage.getItem(STORAGE_KEY_POWERUP_COUNT)
+      const savedPowerUpMinusLevel = localStorage.getItem(STORAGE_KEY_POWERUP_MINUS_LEVEL)
+      const savedPowerUpMinusCount = localStorage.getItem(STORAGE_KEY_POWERUP_MINUS_COUNT)
 
       if (savedPot) setPotCapacity(parseInt(savedPot, 10))
       if (savedIngredients) setCheckedIngredients(new Set(JSON.parse(savedIngredients)))
       if (savedTicket) setUseGoodCampTicket(savedTicket === 'true')
       if (savedSunday) setUseSundayPot(savedSunday === 'true')
+      if (savedPowerUpLevel) setCookingPowerUpLevel(parseInt(savedPowerUpLevel, 10))
+      if (savedPowerUpCount) setCookingPowerUpCount(parseInt(savedPowerUpCount, 10))
+      if (savedPowerUpMinusLevel) setCookingPowerUpMinusLevel(parseInt(savedPowerUpMinusLevel, 10))
+      if (savedPowerUpMinusCount) setCookingPowerUpMinusCount(parseInt(savedPowerUpMinusCount, 10))
     } catch {
       setStorageBlocked(true)
     } finally {
@@ -57,6 +73,22 @@ export default function Home() {
     if (isLoaded) try { localStorage.setItem(STORAGE_KEY_SUNDAY, useSundayPot.toString()) } catch {}
   }, [useSundayPot, isLoaded])
 
+  useEffect(() => {
+    if (isLoaded) try { localStorage.setItem(STORAGE_KEY_POWERUP_LEVEL, cookingPowerUpLevel.toString()) } catch {}
+  }, [cookingPowerUpLevel, isLoaded])
+
+  useEffect(() => {
+    if (isLoaded) try { localStorage.setItem(STORAGE_KEY_POWERUP_COUNT, cookingPowerUpCount.toString()) } catch {}
+  }, [cookingPowerUpCount, isLoaded])
+
+  useEffect(() => {
+    if (isLoaded) try { localStorage.setItem(STORAGE_KEY_POWERUP_MINUS_LEVEL, cookingPowerUpMinusLevel.toString()) } catch {}
+  }, [cookingPowerUpMinusLevel, isLoaded])
+
+  useEffect(() => {
+    if (isLoaded) try { localStorage.setItem(STORAGE_KEY_POWERUP_MINUS_COUNT, cookingPowerUpMinusCount.toString()) } catch {}
+  }, [cookingPowerUpMinusCount, isLoaded])
+
   const toggleIngredient = (ingredientId: string) => {
     setCheckedIngredients(prev => {
       const next = new Set(prev)
@@ -77,9 +109,17 @@ export default function Home() {
     setCheckedIngredients(new Set(INGREDIENTS.map(i => i.id)))
   }
 
-  // 計算順: なべ容量 × ウィークエンドボーナス × いいキャンプチケット → 四捨五入
-  // (wikiより: イベント→ウィークエンド→料理パワーアップ→チケットの順。四捨五入はチケット適用後に1回)
-  const effectivePotCapacity = Math.round(potCapacity * (useSundayPot ? 2 : 1) * (useGoodCampTicket ? 1.5 : 1))
+  // 計算順: (なべ容量 × 日曜2倍 + 料理パワーアップ加算) × いいキャンプチケット → 四捨五入
+  // (wikiより: 料理パワーアップ(マイナス含む)の加算分は日曜2倍の対象外だが、いいキャンプチケット1.5倍は加算分にも適用される)
+  // 通常版・マイナス版は同一のボーナス枠として合算し、上限200個でクランプする
+  const cookingPowerUpBonus = Math.min(
+    200,
+    COOKING_POWER_UP_BONUS[cookingPowerUpLevel] * cookingPowerUpCount +
+      COOKING_POWER_UP_MINUS_BONUS[cookingPowerUpMinusLevel] * cookingPowerUpMinusCount
+  )
+  const effectivePotCapacity = Math.round(
+    (potCapacity * (useSundayPot ? 2 : 1) + cookingPowerUpBonus) * (useGoodCampTicket ? 1.5 : 1)
+  )
 
   const bestRecipes = useMemo(() => {
     return getBestRecipesPerCategory(checkedIngredients, effectivePotCapacity)
@@ -118,6 +158,14 @@ export default function Home() {
               onToggleGoodCampTicket={() => setUseGoodCampTicket(prev => !prev)}
               useSundayPot={useSundayPot}
               onToggleSundayPot={() => setUseSundayPot(prev => !prev)}
+              cookingPowerUpLevel={cookingPowerUpLevel}
+              onCookingPowerUpLevelChange={setCookingPowerUpLevel}
+              cookingPowerUpCount={cookingPowerUpCount}
+              onCookingPowerUpCountChange={setCookingPowerUpCount}
+              cookingPowerUpMinusLevel={cookingPowerUpMinusLevel}
+              onCookingPowerUpMinusLevelChange={setCookingPowerUpMinusLevel}
+              cookingPowerUpMinusCount={cookingPowerUpMinusCount}
+              onCookingPowerUpMinusCountChange={setCookingPowerUpMinusCount}
               effectivePotCapacity={effectivePotCapacity}
             />
             <IngredientsSection

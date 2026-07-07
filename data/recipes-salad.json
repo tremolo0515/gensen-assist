@@ -303,5 +303,18 @@
     ],
     "totalCount": 105,
     "energy": 25162
+  },
+  {
+    "id": "gorogoro-nettou-salad",
+    "name": "ごろごろねっとうサラダ",
+    "category": "salad",
+    "ingredients": [
+      { "ingredientId": "zussiri-kabocha", "count": 20 },
+      { "ingredientId": "hokkori-potato", "count": 30 },
+      { "ingredientId": "wakakusa-corn", "count": 18 },
+      { "ingredientId": "ajiwai-kinoko", "count": 27 }
+    ],
+    "totalCount": 95,
+    "energy": 25356
   }
 ]
